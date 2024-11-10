@@ -1,8 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600&display=swap');
 
-*{
-
+* {
     padding: 0;
     margin: 0;
     text-decoration: none;
@@ -10,61 +9,91 @@
     box-sizing: border-box;
 }
 
-nav{
-   font-family: 'QuickSand';
+body {
+    font-family: 'Quicksand', sans-serif;
+}
+
+nav {
    height: 70px;
    width: 100%;
-
+   background-color: white;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 0 20px;
+   position: relative;
+   border-bottom: 1px solid black;
+   position: sticky;
+   top: 0;
+  
 }
-.logo{
-    font-family: 'Dancing Script' ;
+
+.logo {
+    font-family: 'Dancing Script', cursive;
     font-size: 50px;
     font-weight: bold;
-    width: 100;
-}
-.heart{
-    width: 12px;
-    position: relative;
-    right: 10px;
 }
 
-nav ul{
-    float: right;
-    margin-right: 20px;
+.heart {
+    width: 12px;
+    margin-left: 5px;
 }
-nav .list li{
-   display: inline-block;
-   margin: 0 20px;
-   line-height: 80px;
+
+nav .list {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin: 0 20px;
+    gap: 60px;
 }
-nav .list li a{
+
+nav .list li a {
     color: black;
     font-size: 17px;
     border-radius: 4px;
     padding: 7px 13px;
+    transition: background-color 0.3s;
 }
-a.active,a:hover{
+
+a.active, a:hover {
     background-color: rgb(248, 248, 248);
-    transition: .5s;
 }
-.checkbox{
+
+.checkbox {
     font-size: 28px;
-    float: right;
-    line-height: 80px;
-    margin-right: 40px;
-    cursor: pointer;
     display: none;
+    cursor: pointer;
 }
+
 #checkbox {
     display: none;
 }
-@media (max-width:925px){
-    label.logo{
-        font-size: 50px;
-        padding-left: 50px;
-    }
-    nav .list li a{
-        font-size: 17px;
+
+@media (max-width: 825px) {
+    .checkbox {
+        display: block;
     }
 
+    nav .list {
+        flex-direction: column;
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 70px);
+        background-color: rgb(221, 219, 219);
+        transition: left 0.5s;
+        text-align: center;
+        padding-top: 20px;
+    }
+
+    nav .list li {
+        margin: 15px 0;
+    }
+
+    #checkbox:checked ~ .list {
+        left: 0;
+    }
+
+    
 }
