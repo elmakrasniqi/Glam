@@ -1,0 +1,114 @@
+header {
+    background-color: aliceblue;
+    padding: 20px;
+    text-align: center;
+}
+
+nav {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #333;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 60px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+    padding: 20px 30px;
+}
+
+nav ul li a:hover {
+    color: #007bff;
+}
+
+.search-bar {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.search-bar input[type="text"] {
+    padding: 8px;
+    width: 60%;
+    margin-right: 10px;
+    width: 40vw;
+}
+
+.search-bar button {
+    padding: 8px 16px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: #555;
+}
+#products{
+    padding: auto;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /*E shfaqproduktin n3 e ma shum kolona*/
+    gap: 20px;
+    justify-items: center;
+}
+.product-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.product-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.product-item h3 {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.product-item .price {
+    font-size: 1.5em;
+    color: #e74c3c;
+    margin-bottom: 15px;
+}
+
+.product-item button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.product-item button:hover {
+    background-color: #555;
+} 
+.product-item:hover {
+    transform: translateY(-10px); /* Lëvizja e produktit kur kalon mbi të */
+}
