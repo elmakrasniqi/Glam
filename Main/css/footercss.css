@@ -61,7 +61,7 @@ body {
     margin-bottom: 10px;
 }
 .footer-col ul li a:hover{
-    color: grey;
+    color:rgb(250, 224, 224) ;
     padding: 0 10px;
 }
 .footer-col .social-links a{
