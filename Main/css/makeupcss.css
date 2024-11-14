@@ -68,4 +68,143 @@ nav ul li a:hover {
     background-color: #555;
 }
 
+#products {
+    padding: auto;
+    background-color: #f9f9f9;
+    text-align: center;
+}
 
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.product-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.product-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.product-item h3 {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.product-item .price {
+    font-size: 1.5em;
+    color: rgb(38, 34, 34);
+    margin-bottom: 15px;
+}
+
+.product-item button {
+    padding: 10px 20px;
+    background-color: rgb(38, 34, 34);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.product-item button:hover {
+    background-color: #555;
+}
+
+.product-item:hover {
+    transform: translateY(-10px);
+}
+
+@media screen and (max-width: 1200px) {
+    header {
+        padding: 15px;
+    }
+
+    nav ul li {
+        margin-right: 40px;
+    }
+
+    .search-bar input[type="text"] {
+        width: 50%;
+    }
+
+    .search-bar button {
+        padding: 8px 14px;
+    }
+
+    .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}
+
+@media screen and (max-width: 768px) {
+    header {
+        padding: 10px;
+    }
+
+    nav ul {
+        flex-direction: column;
+    }
+
+    nav ul li {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .search-bar input[type="text"] {
+        width: 50%;
+    }
+
+    .search-bar button {
+        width: 10%;
+        padding: 8px 12px;
+    }
+
+    .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .product-item {
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    header {
+        padding: 10px;
+    }
+
+    nav ul li {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+
+    .search-bar input[type="text"] {
+        width: 80%;
+    }
+
+    .search-bar button {
+        width: 20%;
+        padding: 6px 10px;
+    }
+
+    .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .product-item {
+        padding: 10px;
+    }
+}
