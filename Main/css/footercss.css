@@ -41,22 +41,13 @@ body {
     width: 25%;
     padding: 0 15px;
 }
+
 .footer-col h4{
     font-family: 'Quicksand';
-    text-decoration: overline;
     margin-bottom: 30px ;
-    position: relative;
+    text-decoration: overline;
 }
-.footer-col h4::before{
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -10px;
-    height: 2px;
-    box-sizing: border-box;
-    width: 50;
-    background-color: red;
-}
+
 .footer-col ul li{
     margin-bottom: 10px;
 }
@@ -68,7 +59,7 @@ body {
   display: inline-block;
   height: 40px;
   width: 40px;
-  background-color: rgba(200, 200, 200, 0.2);
+  background-color:  rgba(200, 200, 200, 0.2);
   margin-right: 10px;
   margin: 0 10px 10px 0;
   text-align: center;

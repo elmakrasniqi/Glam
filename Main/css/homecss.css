@@ -1,0 +1,56 @@
+.mySlidesFade{
+    display: none;
+}
+.ad{
+    vertical-align: middle;
+}
+.slide {
+    display: none; 
+    position: relative;
+}
+
+.slide.active {
+    display: block; 
+}
+
+
+a.prev, a.next {
+    position: absolute;
+    top: 350px; 
+    transform: translateY(-50%);
+    font-size: 14px; 
+    color: rgba(255, 255, 255, 0); 
+    background-color: rgba(46, 40, 40, 0); 
+    padding: 10px; 
+    height: 40px;
+    border-radius: 5px; 
+    cursor: pointer;
+    z-index: 1000;
+    text-decoration: none;
+}
+
+a.prev {
+    left: 7px; 
+}
+
+a.next {
+    right: 7px;
+}
+
+
+
+@media (max-width: 825px) { 
+    a.prev, a.next {
+        font-size: 18px; 
+        padding: 8px; 
+        top: 150px; 
+    }
+}
+
+@media (max-width: 480px) { 
+    a.prev, a.next {
+        font-size: 16px; 
+        padding: 6px; 
+        top: 120px; 
+    }
+}

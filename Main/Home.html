@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./css/headercss.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="./css/homecss.css">
 </head>
 <body>
 
@@ -32,13 +33,48 @@
 
 
     <!-- Main content -->
-    <h1>Welcome to My Home Page</h1>
+   <div class="slideshow" >
+    <div class="mySlidesFade">
+      <img src="../img/loreal.png" alt="loreal" width="100%" class="ad">
+    </div>
+    <div class="mySlidesFade">
+      <img src="../img/revlon.png" alt="revlon" width="100%" class="ad">
+    </div>
+    <div class="mySlidesFade">
+      <img src="../img/inflable1.png" alt="inflable" width="100%" class="ad">
+    </div>
 
+
+      <a class="prev" onclick="plusSlides(-1)">&#10094</a>
+      <a class="next" onclick="plusSlides(1)">&#10095</a>
+
+   </div>
+   <br>
+   <div class="star" style="text-align: center;">
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
+
+   </div>
+
+   <div class="products">
+    <!--Produktet e vequara-->
+   </div>
+
+   <div class="offers">
+    <div class="sales">
+      <h1>Gift cards</h1>
+      <a href="#">New way to suprise your loved ones and let them pick their gift.</a>
+    </div>
+
+   </div>
+
+  
    <footer class="footer">
         <div class="container">
           <div class="row">
                 <div class="footer-col">
-                   <h4>Adresa</h4>
+                   <h4>Adress</h4>
                   <ul>
                       <li><a href="#">At Bulevardi Bill Clinton <br>
                         Prishtinë, Kosovë<br>
@@ -67,5 +103,6 @@
         </div>
     </div>
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>
