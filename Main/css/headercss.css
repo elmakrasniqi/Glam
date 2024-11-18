@@ -11,10 +11,14 @@
 
 body {
     font-family: 'Quicksand', sans-serif;
+    height: 100%;
 }
 
 nav {
-   height: 100px;
+   position: fixed;
+   top: 0;
+   left: 0;
+   z-index: 1000;
    width: 100%;
    background-color: white;
    display: flex;
@@ -22,9 +26,6 @@ nav {
    justify-content: space-between;
    padding: 0 20px;
    border-bottom: 1px solid black;
-   position: sticky !important;
-   top: 0;
-  
 }
 
 .logo {
@@ -72,8 +73,12 @@ a.active, a:hover {
 
 @media (max-width: 820px) {
     nav{
-        position: sticky;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
     }
+    
     .checkbox {
         display: block;
     }
