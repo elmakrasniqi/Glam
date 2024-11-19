@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./css/headercss.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="./css/homecss.css">
 </head>
 <body>
 
@@ -23,22 +24,101 @@
         
         <ul class="list">
             <li><a class="active" href="../Home.html">Home</a></li>
-            <li><a href="../MakeUp.html">Make up</a></li>
-            <li><a href="../AboutUs.html">About Us</a></li>
-            <li><a href="../Login.html">Login</a></li>
+            <li><a href="./MakeUp.html">Make up</a></li>
+            <li><a href="./AboutUs.html">About Us</a></li>
+            <li><a href="./Login.html">Login</a></li>
        </ul>
     </nav>
 
 
 
     <!-- Main content -->
-    <h1>Welcome to My Home Page</h1>
+   <div class="slideshow" >
+    <div class="mySlidesFade">
+      <img src="../img/loreal.png" alt="loreal" width="100%" class="ad">
+    </div>
+    <div class="mySlidesFade">
+      <img src="../img/revlon.png" alt="revlon" width="100%" class="ad">
+    </div>
+    <div class="mySlidesFade">
+      <img src="../img/inflable1.png" alt="inflable" width="100%" class="ad">
+    </div>
 
+
+      <a class="prev" onclick="plusSlides(-1)">&#10094</a>
+      <a class="next" onclick="plusSlides(1)">&#10095</a>
+
+   </div>
+   <br>
+   <div class="star" style="text-align: center;">
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
+
+   </div>
+
+   <div class="products">
+    <!--Produktet e vequara-->
+   </div>
+
+   <div class="offers">
+    <div class="sales">
+       <div class="imgoffers">
+           <img src="../img/giftcard.png" alt="giftcard" style="width: 100%;">
+       </div>
+       <div class="offerstext1">
+          <h1 class="ad">Gift cards</h1>
+          <a href="#" style="color: white;">New way to suprise your loved ones and let them pick their gift.</a>
+       </div>
+    </div>
+
+    <div class="sales">
+       <div class="imgoffers">
+          <img src="../img/blackfriday.png" alt="black-friday" style="width: 100%;">
+      </div>
+      <div class="offerstext2">
+         <h1 class="ad">Black Friday</h1>
+         <a href="#" style="color: white;">So many suprises.Up to even 50% off.Don't miss it!</a>
+      </div>
+    </div>
+    <div class="sales">
+      <div class="imgoffers">
+          <img src="../img/new.png" alt="new" style="width: 100%;">
+      </div>
+      <div class="offerstext3">
+          <h1 class="ad">New products</h1>
+          <a href="#" style="color: white;">You can find the newest products in the market here.</a>
+     </div>
+    </div>
+
+   </div>
+
+   <div class="colors">
+    <p style=" color: rgb(250, 224, 224) ;">show your true colors</p>
+   </div>
+
+  
    <footer class="footer">
+
+    <div class="help">
+      <div class="box">
+           <img src="../img/package-icon.png" alt="package-icon" class="con">
+            <h1 class="ship">Secure payments</h1>
+      </div>
+      <div class="box">
+        <img src="../img/gift.png" alt="gift" class="con">
+         <h1 class="ship">Free Shipping </h1>
+     </div>
+     <div class="box">
+      <img src="../img/chat-icon.png" alt="chat-icon" class="con">
+       <h1 class="ship">Secure payments</h1>
+   </div>
+    </div>
+
         <div class="container">
           <div class="row">
                 <div class="footer-col">
-                   <h4>Adresa</h4>
+                   <h4>Adress</h4>
                   <ul>
                       <li><a href="#">At Bulevardi Bill Clinton <br>
                         Prishtinë, Kosovë<br>
@@ -51,7 +131,7 @@
                   <h4>Help</h4>
                   <ul>
                       <li><a href="#">Returns</a></li>
-                      <li><a href="../AboutUs.html">About</a></li>
+                      <li><a href="../AboutUs.html">About us</a></li>
                       <li><a href="#">Shipping</a></li>
                   </ul>
                 </div>
@@ -65,7 +145,11 @@
                 </div>
             </div>
         </div>
+        <div class="copyrights">
+          <p style="color: rgb(119, 119, 119);">Copyright © 2024 Glam.All rights reserved!</p>
+        </div>
     </div>
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>
