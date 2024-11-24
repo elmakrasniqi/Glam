@@ -1,0 +1,32 @@
+.AboutUs{
+    margin-top: 100px;
+}
+.greeting{
+    padding: 0 0 35px  60px;
+    border-bottom: 1px solid rgb(241, 239, 239);
+}
+.about-whole{
+    display: flex;
+    border-bottom: 1px solid rgb(241, 239, 239);
+}
+.store img{
+    border-radius: 4px ;
+    box-shadow: 10px 4px 3px 4px  rgba(173, 173, 173, 0.096);
+}
+.about{
+    padding: 20px 0 35px 60px;
+    width: 950px;
+}
+.awards{
+    display: flex;
+    margin-top: 80px;
+    padding: 20px 0 35px 60px;
+}
+.award-pic{
+    height: auto;
+    width: 400px;
+    padding-right: 100px;
+}
+.award-list li{
+    padding-bottom: 10px;
+}

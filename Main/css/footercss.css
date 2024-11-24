@@ -9,33 +9,35 @@
     box-sizing: border-box;
     color: black;
 }
-html, body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-}
 
-body {
-    display: flex;
-    flex-direction: column;
-}
+
+
 
 .help{
+    max-width: 1590px;
     display: flex;
     align-items: center;
-    padding-left: 280px;
+    justify-content: center;
+    padding-right: 140px;
     margin-bottom: 70px;
     height: 100px;
     box-shadow: 3px 2px 3px 3px rgba(150, 150, 150, 0.11);
 }
 .box{
-    padding-right: 400px;
     font-size: 7px;
+
+    width: auto;
+    padding: 40px 170px;
+
 }
-.box ,.con{
+.one{
+   padding-right: 210px; 
+}
+
+.box .con{
     padding-left: 30px;
-    width: 60px;
+    width: 63px;
+    height: 30px;
     align-items: center;
 }
 .box,.ship{
@@ -43,9 +45,11 @@ body {
 }
 
 .container{
-    max-width: 1170px;
+    max-width: 1480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: auto;
-    flex: 1;
 }
 .row{
     display: flex;
@@ -53,14 +57,16 @@ body {
 }
 .footer{
     background-color: white;
-    padding: 70px 0;
     font-family: 'Quicksand';
     font-size: 15px;
-    margin-top: auto;
+     align-items: center; 
+     justify-content: center;
+  
 }
 .footer-col{
-    width: 25%;
-    padding: 0 15px;
+     padding: 80px 80px;
+     width: auto;
+    padding: 40px 120px;
 }
 
 .footer-col h4{
@@ -74,7 +80,6 @@ body {
 }
 .footer-col ul li a:hover{
     color:rgb(250, 224, 224) ;
-    padding: 0 10px;
 }
 .footer-col .social-links a{
   display: inline-block;
@@ -105,25 +110,26 @@ body {
 }
 
 
-@media (max-width: 825px) {
+@media (max-width: 820px) {
     .help {
-        width: 100%;
-        display: flex;
-        flex-direction: row; 
-        justify-content: space-between; 
-        align-items: center; 
-        padding-top: 10px;
-        padding-left: 20px;
-        padding-right: 20px; 
-        margin-bottom: 20px; 
-        height: auto; 
-        box-shadow: 3px 2px 3px 3px rgba(150, 150, 150, 0.11); 
-    }
+    width: 100%;
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-evenly; 
+    align-items: center; 
+    padding-left: 20px;
+    padding-right: 20px; 
+    margin-bottom: 20px; 
+    height: auto; 
+    box-shadow: 3px 2px 3px 3px rgba(150, 150, 150, 0.11); 
+}
+
 
     .box {
+        margin-bottom: 50px;
         font-size: 8px; 
         padding-right: 10px; 
-        height: 100px;
+        height: 60px;
     }
 
     .box, .con {
@@ -139,5 +145,8 @@ body {
 @media (max-width: 574px){
     .footer-col{
         width: 100%;
+       
     }
+    
 }
+
