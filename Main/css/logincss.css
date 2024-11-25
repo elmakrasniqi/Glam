@@ -17,6 +17,8 @@ body{
 
 }
 .wrapper{
+    margin-top: 700px;
+    margin-bottom: 40px;
     width: 420px; 
     background-color: rgb(246, 245, 245);
     color:black;
