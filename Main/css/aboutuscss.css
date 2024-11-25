@@ -5,6 +5,13 @@
     padding: 0 0 35px  60px;
     border-bottom: 1px solid rgb(241, 239, 239);
 }
+ .heart-greet{
+    display: flex;
+}
+.heart2{
+    height: 12px;
+    width: 12px;
+}
 .about-whole{
     display: flex;
     border-bottom: 1px solid rgb(241, 239, 239);
@@ -15,18 +22,110 @@
 }
 .about{
     padding: 20px 0 35px 60px;
-    width: 950px;
+    margin-right: 240px;
+    width: 700px;
+}
+.section{
+    margin: 40px;
+    display: flex;
 }
 .awards{
     display: flex;
     margin-top: 80px;
-    padding: 20px 0 35px 60px;
+    padding: 20px 0 20px 60px;
+    background-color: rgb(232, 235, 248);
+    box-shadow: 6px 4px 3px 4px  rgba(173, 173, 173, 0.096);
+    border-radius: 12px ;
+    margin: 40px;
+    width: 600px;
+    padding-right: 10px;
+}
+.words{
+
+    margin-top: 40px;
+    width: 730px;
+    margin-left: 300px;
 }
 .award-pic{
-    height: auto;
-    width: 400px;
+    height: 100px;
+    width: 200px;
+    margin-top:20px ;
     padding-right: 100px;
 }
 .award-list li{
     padding-bottom: 10px;
 }
+.reviews{
+    margin: 40px;
+    border-top: 1px solid rgb(241, 239, 239);
+}
+.reviews1{
+    margin: 40px;
+    font-style: bolder;
+}
+.reviews1 h3{
+    padding-top: 30px;
+}
+@media (max-width: 1025px) {
+    
+    .greeting {
+      display: flex;
+      flex-direction: column;
+      margin-right: 40px;
+    }
+    .greeting h3{
+        text-align: center;
+    }
+    .heart-greet {
+      flex-direction: column; 
+      align-items: center; 
+    }
+    .heart2 {
+      height: 10px; 
+      width: 10px;
+    }
+    .about-whole {
+      flex-direction: column;
+      border-bottom: none; 
+    }
+    .store img {
+      width: 100%; 
+      margin-left: 15px;
+      max-width: 450px; 
+     }
+    .about {
+      padding: 20px;
+      margin-right: 0; 
+      width: 100%; 
+    }
+    .section {
+      flex-direction: column; 
+      margin: 20px 30px 0 0; 
+    }
+    .awards {
+      margin: 20px;
+      width: 100%; 
+      padding: 20px; 
+      box-shadow: none; 
+    }
+    .words {
+        width: 95%;
+        margin-left: 20px;
+    }
+    .award-pic {
+      position: relative;
+      top:40px;
+      height: 100px;
+      width: 200px; 
+    }
+    .award-list li {
+      padding-bottom: 8px; 
+    }
+    .reviews {
+      margin: 20px; 
+    }
+    .reviews1 {
+      margin: 20px;
+      font-weight: bold;
+    }
+  }
