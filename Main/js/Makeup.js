@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const productBrand = product.getAttribute('data-name');
             
             if (brand === '' || productBrand === brand) {
-                product.style.display = 'block';
+                product.style.display = 'flex';
             } else {
                 product.style.display = 'none';
             }
