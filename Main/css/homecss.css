@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 .slideshow {
     margin-top: 60px; 
 }
@@ -5,6 +7,7 @@
 
 .mySlidesFade{
     display: none;
+    transition:  10s ease-in-out ;
 }
 .ad{
     vertical-align: middle;
@@ -41,6 +44,65 @@ a.prev {
 a.next {
     right: 7px;
 }
+.explain{
+    display: flex;
+    margin: 30px;
+    justify-content: space-between;
+    padding-bottom: 50px;
+    border-bottom: 1px solid rgb(241, 239, 239);
+}
+.explain1{
+    width: 400px;
+    text-align: center;
+}
+.explain1 h1{
+    font-family: 'Poppins';
+    text-align: center;
+}
+.explain1 h3{
+  font-family: 'Dancing Script';
+  text-align: center;
+}
+.products-1{
+   margin: 30px;
+}
+.makeup-button{
+    border: 2px solid pink;
+    width: 130px;
+    height: 40px;
+    text-align: center;
+    padding-top: 8px;
+}
+.chanel{
+    display: flex;
+    flex-direction: row;
+    padding-top: 130px; 
+    margin-bottom: 130px;
+    font-family: 'Poppins';
+    height: 632px;
+}
+.chanel-ad{
+    padding: 70px;
+    text-align: left;
+    width: 70%;
+    background-color: rgb(228, 228, 228);
+}
+.chanel-makeup{
+    margin-top: 30px;
+    box-shadow: 10px 10px 10px 10px rgba(29, 29, 29, 0.144);
+    border-radius: 40px;
+    width: 130px;
+    height: 45px;
+    text-align: center;
+    padding-top: 8px;
+}
+.chanel-img{
+    margin: 0;
+    padding: 0;
+    height: 600px;
+    width: 900px;
+}
+
 .offers{
     margin-top: 10px;
     display: flex;
@@ -51,10 +113,17 @@ a.next {
     width: 33%;
     color: white;
     padding-right: 13px;
-    
    
 }
+.imgoffers .img-gift{
+    box-shadow: 3px 0px 0px 0px  rgba(173, 173, 173, 0.26);
+    border-top-right-radius: 9px;
+    border-top-left-radius: 9px;
+}
+
+
 .offerstext1{
+    box-shadow: 3px 0px 0px 0px  rgba(173, 173, 173, 0.26);
     padding-left: 20px;
     background-color: rgb(250, 183, 194);
     height: 110px;
@@ -65,7 +134,7 @@ a.next {
 
 }
 .offerstext2{
-    
+    box-shadow: 3px 0px 0px 0px  rgba(173, 173, 173, 0.26);
     background-color: rgb(0, 0, 0);
     height: 110px;
     margin-top: -5px;
@@ -75,6 +144,7 @@ a.next {
 
 }
 .offerstext3{
+    box-shadow: 3px 0px 0px 0px rgba(173, 173, 173, 0.26);
     background-color: rgb(223, 203, 206);
     height: 110px;
     margin-top: -5px;
@@ -92,7 +162,32 @@ a.next {
     text-align: center;
     font-size: 30px;
     padding-top: 20px;
+    padding-bottom: 50px;
 }
+
+.ysl{
+    display: flex;
+    flex-direction: row;
+    padding-top: 130px;
+    font-family: 'Poppins';
+    height: 550px;
+}
+.ysl-ad{
+    padding: 60px;
+    text-align: left;
+    width: 70%;
+    background-color: rgb(252, 206, 155);
+}
+.ysl-makeup{
+    margin-top: 30px;
+    box-shadow: 10px 10px 10px 10px rgba(29, 29, 29, 0.144);
+    border-radius: 40px;
+    width: 130px;
+    height: 45px;
+    text-align: center;
+    padding-top: 8px;
+}
+
 
 
 @media (max-width: 800px) { 
@@ -112,11 +207,77 @@ a.next {
     .slideshow {
         margin-top: 60px; 
     }
+    .explain {
+        flex-direction: column; 
+        margin-top: 300px;
+        align-items: center; 
+        border-bottom: none; 
+    }
+  
+    .explain1 {
+        width: 100%; 
+        margin-bottom: 20px; 
+        text-align: center; 
+    }
+  
+    .explain1 h1 {
+        font-size: 24px; 
+    }
+  
+    .explain1 h3 {
+        font-size: 18px; 
+    }
+    .ysl {
+        flex-direction: column;
+        padding: 20px;
+        height: auto;
+        
+    }
+    .ysl-img{
+      margin-bottom: -10px ;
+    }
+
+    .ysl-ad {
+        width: 100%; 
+        padding: 20px;
+        text-align: center;
+    }
+
+    .ysl-makeup {
+        margin: 20px auto; 
+        width: 150px; 
+        height: 50px;
+    }
+    .chanel {
+        flex-direction: column; 
+        padding-top: 80px; 
+        margin-bottom: 5 0px; 
+        height: 900px;
+    }
+
+    .chanel-ad {
+        padding: 30px; 
+        width: 100%; 
+        text-align: center; 
+    }
+
+    .chanel-makeup {
+        margin-top: 20px;
+        width: 150px; 
+        height: 50px;
+        margin: 20px auto; 
+    }
+
+    .chanel-img {
+        width: 100%; 
+        height: 400px; 
+    }
+   
 }
 
 @media (max-width: 480px) { 
     a.prev, a.next {
-        font-size: 16px; 
+        font-size: 13px; 
         padding: 6px; 
         top: 120px; 
     }
