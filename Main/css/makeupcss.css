@@ -1,129 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600&display=swap');
 
-* {
-    padding: 0;
-    margin: 0;
-    text-decoration: none;
-    list-style: none;
-    box-sizing: border-box;
-}
 
 
-body {
-    overflow-x: hidden;
-    font-family: 'Quicksand', sans-serif;
-    
-}
-header{
-    position: relative;
-    z-index: 1;
-}
-
-nav {
-   height: 95px;
-   width: 100%;
-   background-color: white;
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   padding: 0 20px;
-   border-bottom: 1px solid black;
-   position: sticky;
-   top: 0;
-   margin-bottom: 20px;
-   z-index: 1000;
-}
-
-
-.logo {
-    font-family: 'Dancing Script', cursive;
-    font-size: 50px;
-    font-weight: bold;
-}
-
-.heart {
-    width: 12px;
-    margin-left: 5px;
-}
-
-nav .list {
+.makeup-header{
     display: flex;
-    gap: 20px;
-    align-items: center;
-    margin: 0 20px;
-    gap: 60px;
 }
 
-nav .list li a {
-    color: black;
-    font-size: 17px;
-    border-radius: 4px;
-    padding: 7px 13px;
-    transition: background-color 0.3s;
-}
-
-a.active, a:hover {
-    color:rgb(250, 224, 224) !important;
-}
-
-.checkbox {
-    font-size: 28px;
-    display: none;
-    cursor: pointer;
-}
-
-#checkbox {
-    display: none;
-}
-
-
-
-@media (max-width: 825px) {
-    nav{
-        position: sticky;
-    }
-    .checkbox {
-        padding-right: 150px;
-        display: block;
-    }
-
-    nav .list {
-        flex-direction: column;
-        position: fixed;
-        top: 95px;
-        left: -100%;
-        width: 100%;
-        height: 100vh ;
-        background-color: rgba(172, 171, 171, 0.863);
-        transition: left 0.5s;
-        text-align: center;
-        padding-top: 20px;
-        margin: 0;
-    }
-
-    nav .list li {
-        margin: 15px 0;
-    }
-
-    #checkbox:checked ~ .list {
-        left: 0;
-    }
-
-    
-}
-
-.search-container {
-    display: flex;
-    align-items: center;  
-    justify-content: flex-start; 
-    gap: 0px;  
-    margin-top: 40px;
-    float: right;
+.search{
+    width: 500px;
 }
 
 #search-bar { 
-    margin-left: 40%;
+    margin-left: 8%;
     margin-top: 100px;
     margin-bottom: 0px;
     position: relative;
@@ -140,9 +29,6 @@ a.active, a:hover {
 }
 
 #search-button {
-    margin-bottom: 0px;
-    margin-top: 100px;
-    margin-left: 0px;
     position: relative;
     z-index: 10;
     padding: 8px 16px;
@@ -158,12 +44,17 @@ a.active, a:hover {
 #search-button:hover {
     background-color: rgb(220, 177, 184);
 }
+
 @media(max-width:768px){
     
-.search-container {
-    justify-content: center;
-    flex-direction: c;
-}
+    .makeup-header{
+        display: flex;
+    }
+    
+    .search{
+        width: 500px;
+    }
+    
 #search-bar { 
     margin-left: 40%;
     margin-top: 100px;
@@ -197,9 +88,14 @@ a.active, a:hover {
 }
 @media (max-width:480px){
        
-.search-container {
-    justify-content: center;
-}
+    .makeup-header{
+        display: flex;
+    }
+    
+    .search{
+        width: 500px;
+    }
+    
 #search-bar { 
     margin-left: 100px;
     justify-content: center;
@@ -236,25 +132,14 @@ a.active, a:hover {
     
 }
 
-
 .brand-selector {
-    width: 100%;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 4px;
-    border: 1px solid white;
+    margin-top: 150px;
     position: relative;
-    box-sizing: border-box;
-
+    top:30px
 }
 
-
 .brand-selector label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
+    font-size: 16px;
 }
 
 }
@@ -273,8 +158,9 @@ a.active, a:hover {
 }
 @media (max-width: 768px) {
     .brand-selector {
+        height: 90px;
         width: 100%;
-        padding: 5px;
+        padding: 10px;
     }
 
     .brand-selector label {
@@ -307,13 +193,13 @@ a.active, a:hover {
 
 #products {
     padding: auto;
-    background-color: #f9f9f9;
+    background-color:rgba(250, 224, 224, 0.664) ;
     text-align: center;
-    
 }
 
 
 .product-list {
+    margin: 30px;
     padding: 30px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -392,13 +278,7 @@ a.active, a:hover {
 }
 
 @media screen and (max-width: 1200px) {
-    header {
-        padding: 15px;
-    }
 
-    nav ul li {
-        margin-right: 40px;
-    }
 
     .search-bar input[type="text"] {
         width: 50%;
@@ -415,18 +295,6 @@ a.active, a:hover {
 }
 
 @media screen and (max-width: 768px) {
-    header {
-        padding: 10px;
-    }
-
-    nav ul {
-        flex-direction: column;
-    }
-
-    nav ul li {
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
 
     .search-bar input[type="text"] {
         width: 50%;
@@ -447,14 +315,7 @@ a.active, a:hover {
 }
 
 @media screen and (max-width: 480px) {
-    header {
-        padding: 10px;
-    }
-
-    nav ul li {
-        margin-right: 0;
-        margin-bottom: 5px;
-    }
+    
 
     .search-bar input[type="text"] {
         width: 80%;

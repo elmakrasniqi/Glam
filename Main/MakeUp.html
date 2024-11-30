@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glam</title>
+    <title>Makeup-Glam</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/makeupcss.css">
     <link rel="stylesheet" href="./css/footercss.css">
@@ -15,46 +15,44 @@
     
 </head>
 <body>
-    <header>
         <nav>
             <input type="checkbox" id="checkbox">
             <label for="checkbox" class="checkbox">
                 <i class="fas fa-bars"></i>
             </label>
     
-            <label class="logo">Glam </label>
+            <label class="logo"  ><a href="./Home.html">Glam </a></label>
             <img src="../img/heart.png" alt="heart" class="heart">
-    
+            
             <ul class="list">
-                <li><a href="../Home.html">Home</a></li>
-                <li><a class="active" href="./MakeUp.html">Make up</a></li>
-                <li><a href="./AboutUs.html">About Us</a></li>
-                <li><a href="./Login.html">Login</a></li>
+                <li><a  href="Home.html">Home</a></li>
+                <li><a class="active" href="MakeUp.html">Make up</a></li>
+                <li><a href="AboutUs.html">About Us</a></li>
+                <li><a href="Login.html">Login</a></li>
            </ul>
         </nav>
     
-    </header>
-
-    <div class="search-container">
-        <input type="text" id="search-bar" placeholder="Kerko per produkte...">
-        <button id="search-button">Search</button>
-    </div>
-    <div class="brand-selector">
+     <div class="makeup-header">
+     <div class="brand-selector" style="margin-top: 100px;">
         <label for="brand-select"></label>
         <div class= "dropdown">
-        <select id="brand-select">
-            <option value="disabled selected">Brands</option>
-            <option value="">All products</option>
-            <option value="Jean Paul Gaultier">Jean Paul Gaultier</option>
-            <option value="Note">Note</option>
-            <option value="Burberry">Burberry</option>
-            <option value="Essence">Essence</option>
-            <option value="Loreal">Loreal</option>
-        </select>
+          <select id="brand-select">
+              <option value="disabled selected">Brands</option>
+              <option value="">All products</option>
+              <option value="Jean Paul Gaultier">Jean Paul Gaultier</option>
+              <option value="Note">Note</option>
+              <option value="Burberry">Burberry</option>
+              <option value="Essence">Essence</option>
+              <option value="Loreal">Loreal</option>
+          </select>
+      </div>
     </div>
-</div>
-
-<section id="products">
+     <div class="search">
+        <input type="text" id="search-bar" placeholder="Search products...">
+        <button id="search-button">Search</button>
+     </div>
+    </div>
+ <section id="products">
     <div class="product-list" data-name="Jean Paul Gaultier">
         <div class="product-item">
             <img src="image/JEAN PAUL GAULTIER SO SCANDAL EDP.png" alt="JEAN PAUL GAULTIER SO SCANDAL EDP">
@@ -237,58 +235,46 @@
             <button>Add to cart</button>
         </div>
     </div>
-    <footer class="footer">
-
-        <div class="help">
-          <div class="box">
-               <img src="../img/package-icon.png" alt="package-icon" class="con">
-                <h1 class="ship">Secure payments</h1>
-          </div>
-          <div class="box">
-            <img src="../img/gift.png" alt="gift" class="con">
-             <h1 class="ship">Free Shipping </h1>
-         </div>
-         <div class="box">
-          <img src="../img/chat-icon.png" alt="chat-icon" class="con">
-           <h1 class="ship">Secure payments</h1>
-       </div>
-        </div>
     
-            <div class="container">
-              <div class="row">
-                    <div class="footer-col">
-                       <h4>Adress</h4>
-                      <ul>
-                          <li><a href="#">At Bulevardi Bill Clinton <br>
-                            Prishtinë, Kosovë<br>
-                           +383 49 241 241 <br></a>
-                           </li>
-                          <li><a href="#">glamglow@gmail.com</a></li>
-                      </ul>
-                    </div>
-                    <div class="footer-col">  
-                      <h4>Help</h4>
-                      <ul>
-                          <li><a href="#">Returns</a></li>
-                          <li><a href="../AboutUs.html">About us</a></li>
-                          <li><a href="#">Shipping</a></li>
-                      </ul>
-                    </div>
-                    <div class="footer-col">
-                       <h4>Follow us</h4>
-                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-x"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                      </div>
-                    </div>
+    <footer class="footer">
+        <div class="container">
+          <div class="map">
+            <img src="../img/map.png" alt="map" >
+          </div>
+          <div class="row">
+                <div class="footer-col">
+                   <h4>Adress</h4>
+                  <ul>
+                      <li><a href="#">At Bulevardi Bill Clinton <br>
+                        Prishtinë, Kosovë<br>
+                       +383 49 241 241 <br></a>
+                       </li>
+                      <li><a href="#">glamglow@gmail.com</a></li>
+                  </ul>
+                </div>
+                <div class="footer-col">  
+                  <h4>Help</h4>
+                  <ul>
+                      <li><a href="#">Returns</a></li>
+                      <li><a href="../AboutUs.html">About us</a></li>
+                      <li><a href="#">Shipping</a></li>
+                  </ul>
+                </div>
+                <div class="footer-col">
+                   <h4>Follow us</h4>
+                 <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-x"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                  </div>
                 </div>
             </div>
-            <div class="copyrights">
-              <p style="color: rgb(119, 119, 119);">Copyright © 2024 Glam.All rights reserved!</p>
-            </div>
         </div>
-        </footer>
+        <div class="copyrights">
+          <p style="color: rgb(119, 119, 119);">Copyright © 2024 Glam.All rights reserved!</p>
+        </div>
+    </div>
+    </footer>
         
     <script src="js/Makeup.js" type="text/javascript"></script>
 </body>

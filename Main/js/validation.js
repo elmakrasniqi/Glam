@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-);
     // Validimi për Log In
     const LogIn = document.querySelector(".wrapper form[action='']");
     LogIn.addEventListener("submit", (e) => {
@@ -76,4 +75,3 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Hyrja e suksesshme!");
         LogIn.reset();
     });
-});
