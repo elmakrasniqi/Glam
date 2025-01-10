@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./css/headercss.css">
     <link rel="stylesheet" href="./css/homecss.css">
-    <link rel="stylesheet" href="css/contactus.css">
-
+    <link rel="stylesheet" href="./css/contactus.css">
+   
+    
 </head>
 <body>
     <nav>
@@ -34,7 +35,7 @@
         <div class="contact-container">
             <h1>Contact Us</h1>
 
-            <form id="contact-form" action="contactus.php" method="POST">
+            <form id="contact-form" action="../Main/php/contactus.php" method="POST">
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" required placeholder="Enter your full name">
@@ -45,16 +46,16 @@
                 </div>
                 <div class="form-group">
                     <label for="subject">Subject</label>
-                    <input type="text" id="subject" required placeholder="Enter the subject">
+                    <input type="text" id="subject" name="subject"required placeholder="Enter the subject">
                 </div>
                 <div class="form-group">
                     <label for="message">Message</label>
                     <textarea name="message" id="message" required placeholder="Write your message here..."> </textarea>
                 </div>
-                <button type="submit">Send Message</button>
+                <button  name="submit" type="submit">Send Message</button>
             </form>
         </div>
-
+        
     </section>
     <footer class="footer">
         <div class="container">

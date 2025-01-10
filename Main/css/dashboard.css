@@ -41,6 +41,7 @@ nav {
     gap: 20px;
 }
 .stat-item {
+    margin-top: 10px;
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -61,6 +62,7 @@ nav {
     color: #444;
 }
 .recent-activity {
+    margin-top: 10px;
     flex: 2;
     background-color: #fff;
     padding: 20px;
