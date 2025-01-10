@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600&display=swap');
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(232, 220, 222);
+   
+}
+nav {
+    padding: 15px;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#admin-dashboard {
+    margin-top: 90px;
+    padding: 20xp;
+    margin-bottom: 70px;
+    margin-left: 10px;
+    margin-right: 10px;
+    overflow: hidden;
+    border-radius: 5px;
+}
+.dashboard-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.statistics {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+.stat-item {
+    margin-top: 10px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+.stat-item:hover {
+    transform: translateY(-10px);
+}
+.stat-item h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+}
+.stat-item p {
+    font-size: 18px;
+    color: #444;
+}
+.recent-activity {
+    margin-top: 10px;
+    flex: 2;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+
+}
+.recent-activity h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+.recent-activity table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.recent-activity table th,
+.recent-activity table td {
+    padding: 12px;
+    text-align: left;
+    border-radius: 1px solid #ddd;
+}
+.recent-activity table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+
+}
+.recent-activity table tr:hover {
+    background-color: #f9f9f9;
+}
+@media (max-width: 600px) {
+    nav.logo a{
+        font-size: 18px;
+    }
+    nav .list li {
+        margin-right: 15px;
+    }
+    .stat-item h3 {
+        font-size: 18px;
+    }
+    .stat-item p {
+        font-size: 16px;
+    }
+    
+    .recent-activity h2 {
+        font-size: 20px;
+    }
+
+    .recent-activity table th,
+    .recent-activity table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+   
+}
