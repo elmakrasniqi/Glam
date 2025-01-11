@@ -24,10 +24,10 @@
             <img src="../img/heart.png" alt="heart" class="heart">
             
             <ul class="list">
-                <li><a  href="index.html">Home</a></li>
-                <li><a class="active" href="MakeUp.html">Make up</a></li>
-                <li><a href="AboutUs.html">About Us</a></li>
-                <li><a href="Login.html">Login</a></li>
+                <li><a  href="index.php">Home</a></li>
+                <li><a class="active" href="MakeUp.php">Make up</a></li>
+                <li><a href="AboutUs.php">About Us</a></li>
+                <li><a href="Login.php">Login</a></li>
            </ul>
         </nav>
     
@@ -255,7 +255,7 @@
                   <h4>Help</h4>
                   <ul>
                       <li><a href="#">Returns</a></li>
-                      <li><a href="../AboutUs.html">About us</a></li>
+                      <li><a href="../AboutUs.php">About us</a></li>
                       <li><a href="#">Shipping</a></li>
                   </ul>
                 </div>

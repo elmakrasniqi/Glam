@@ -25,10 +25,10 @@
         <img src="../img/heart.png" alt="heart" class="heart">
         
         <ul class="list">
-            <li><a class="active" href="../Home.html">Home</a></li>
-            <li><a href="./MakeUp.html">Make up</a></li>
-            <li><a href="./AboutUs.html">About Us</a></li>
-            <li><a href="./Login.html">Login</a></li>
+            <li><a class="active" href="../Home.php">Home</a></li>
+            <li><a href="./MakeUp.php">Make up</a></li>
+            <li><a href="./AboutUs.php">About Us</a></li>
+            <li><a href="./Login.php">Login</a></li>
        </ul>
     </nav>
 
@@ -101,7 +101,7 @@
        </div>
        <div class="parent-makeup">
         <div class="makeup-button">
-            <a href="./MakeUp.html">See more</a>
+            <a href="./MakeUp.php">See more</a>
         </div>
     </div>
    </div>
@@ -111,7 +111,7 @@
       <h1>Chanel</h1>
       <p>Chanel makeup is the epitome of luxury and refinement, where beauty transcends the surface to reveal a world of elegance and self-expression. Each product is a testament to meticulous craftsmanship, offering not just color, but an experience. From their velvety foundations that seamlessly blend into the skin, to their vibrant lipsticks that empower with every swipe, Chanel makeup creates a flawless canvas for every woman.Every stroke, every shade, is designed to elevate the spirit, making each woman feel like a work of art in her own right. It’s an indulgence, a statement, and above all, a celebration of timeless beauty.</p>
       <div class="chanel-makeup">
-         <a href="./MakeUp.html">See more</a>
+         <a href="./MakeUp.php">See more</a>
       </div>
     </div>
     <div class="chanel-img">
@@ -209,7 +209,7 @@
                   <h4>Help</h4>
                   <ul>
                       <li><a href="#">Returns</a></li>
-                      <li><a href="../AboutUs.html">About us</a></li>
+                      <li><a href="../AboutUs.php">About us</a></li>
                       <li><a href="#">Shipping</a></li>
                   </ul>
                 </div>

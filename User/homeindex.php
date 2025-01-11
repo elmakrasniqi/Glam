@@ -31,7 +31,7 @@ if ($_SESSION['role'] != 0) {
         <img src="../img/heart.png" alt="heart" class="heart">
         
         <ul class="list">
-            <li><a class="active" href="./homeindex.html">Home</a></li>
+            <li><a class="active" href="./homeindex.php">Home</a></li>
             <li><a href="./homeMakeUp.php">Make up</a></li>
             <li><a href="homeAboutUs.php">About Us</a></li>
             <li><a href="../Main/Login.php">LogOut</a></li>
@@ -215,7 +215,7 @@ if ($_SESSION['role'] != 0) {
                   <h4>Help</h4>
                   <ul>
                       <li><a href="#">Returns</a></li>
-                      <li><a href="../AboutUs.html">About us</a></li>
+                      <li><a href="../Main/AboutUs.php">About us</a></li>
                       <li><a href="#">Shipping</a></li>
                   </ul>
                 </div>

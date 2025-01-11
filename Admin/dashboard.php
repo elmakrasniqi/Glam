@@ -27,7 +27,7 @@ if ($_SESSION['role'] != 1) {
         <img src="../img/heart.png" alt="heart" class="heart">
         <ul class="list">
             <li><a href="dashboard.html" class="active">Dashboard</a></li>
-            <li><a href="menage_users.htm">Menage Users</a></li>
+            <li><a href="menage_users.html">Menage Users</a></li>
             <li><a href="menage-products.html">Menage Products</a></li>
             <li><a href="Menage orders.html">Menage Orders</a></li>
             <li><a href="logout.html">Logout</a></li>

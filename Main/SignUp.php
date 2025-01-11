@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h4>Help</h4>
                     <ul>
                         <li><a href="#">Returns</a></li>
-                        <li><a href="../AboutUs.html">About us</a></li>
+                        <li><a href="../AboutUs.php">About us</a></li>
                         <li><a href="#">Shipping</a></li>
                     </ul>
                 </div>

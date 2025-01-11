@@ -50,10 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="checkbox" class="checkbox"><i class="fas fa-bars"></i></label>
         <label class="logo"><a href="index.html">Glam</a></label>
         <ul class="list">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="MakeUp.html">Make up</a></li>
-            <li><a href="AboutUs.html">About Us</a></li>
-            <li><a class="active" href="Login.html">Login</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="MakeUp.php">Make up</a></li>
+            <li><a href="AboutUs.php">About Us</a></li>
+            <li><a class="active" href="Login.php">Login</a></li>
         </ul>
     </nav>
   
@@ -67,13 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="input-box">
                     <input type="password" name="password" placeholder="Password" required>
                 </div>
-                <div class="remember-forgot">
-                    <label for="remember"><input type="checkbox" name="remember">Remember me</label>
-                    <a href="#">Forgot password</a>
-                </div>
                 <button type="submit" class="btn">Log in</button>
                 <div class="register-link">
-                    <p>Don't have an account? <a href="./SignUp.html">Register here</a></p>
+                    <p>Don't have an account? <a href="./SignUp.php">Register here</a></p>
                 </div>
             </form>
         </div>
