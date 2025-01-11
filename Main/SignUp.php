@@ -2,21 +2,28 @@
 require_once '../Backend/User.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user = new User();
+  $user = new User();
 
-    // Retrieve form data
-    $user->first_name = $_POST['first_name'];
-    $user->last_name = $_POST['last_name'];
-    $user->email = $_POST['email'];
-    $user->password = $_POST['password'];
-    $user->role = isset($_POST['role']) ? $_POST['role'] : 0; // Default to user role (0)
+  // Check if all fields are set
+  if (empty($_POST['first_name']) || empty($_POST['last_name']) || empty($_POST['email']) || empty($_POST['password'])) {
+      echo "Please fill all fields!";
+  } else {
+      // Retrieve form data
+      $user->first_name = $_POST['first_name'];
+      $user->last_name = $_POST['last_name'];
+      $user->email = $_POST['email'];
+      $user->password = $_POST['password'];
+      $user->role = isset($_POST['role']) ? $_POST['role'] : 0; // Default to user role (0)
 
-    if ($user->register()) {
-        echo "Registration successful!";
-    } else {
-        echo "Registration failed. Please try again.";
-    }
+      // Try to register the user
+      if ($user->register()) {
+          echo "Registration successful!";
+      } else {
+          echo "Registration failed. Please try again.";
+      }
+  }
 }
+
 ?> 
 
 <!DOCTYPE html>
@@ -31,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
    <link rel="stylesheet" href="./css/headercss.css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-   <link rel="stylesheet" href="./css/homecss.css">
+  
    
 </head>
 <body>
