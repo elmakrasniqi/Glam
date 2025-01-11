@@ -1,3 +1,10 @@
+<?php
+session_start();
+if ($_SESSION['role'] != 0) {
+    header("Location: Login.php"); // Redirect to login if the user is not a regular user
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,9 +32,9 @@
         
         <ul class="list">
             <li><a class="active" href="./homeindex.html">Home</a></li>
-            <li><a href="./homeMakeUp.html">Make up</a></li>
-            <li><a href="homeAboutUs.html">About Us</a></li>
-            <li><a href="LogOut.html">LogOut</a></li>
+            <li><a href="./homeMakeUp.php">Make up</a></li>
+            <li><a href="homeAboutUs.php">About Us</a></li>
+            <li><a href="../Main/Login.php">LogOut</a></li>
        </ul>
     </nav>
 

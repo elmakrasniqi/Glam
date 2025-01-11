@@ -29,12 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (input.placeholder === "Confirm password") confirmPassword = value;
             }
 
-          
-            if (input.type === "tel" && !/^\d+$/.test(value)) {
-                alert("Numri i telefonit duhet të përmbajë vetëm shifra.");
-                isValid = false;
-                return;
-            }
+    
         });
 
         if (password && confirmPassword && password !== confirmPassword) {
