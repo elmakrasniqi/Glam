@@ -1,3 +1,24 @@
+<?php
+require_once '../Backend/User.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user = new User();
+
+    // Retrieve form data
+    $user->first_name = $_POST['first_name'];
+    $user->last_name = $_POST['last_name'];
+    $user->email = $_POST['email'];
+    $user->password = $_POST['password'];
+    $user->role = isset($_POST['role']) ? $_POST['role'] : 0; // Default to user role (0)
+
+    if ($user->register()) {
+        echo "Registration successful!";
+    } else {
+        echo "Registration failed. Please try again.";
+    }
+}
+?> 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,19 +56,31 @@
 <div class="wrapper">
   <div class="form-container">
       <h1>Sign up</h1>
-      <form id="form">
+      <!-- <form id="form">
           <div class="input-box">
               <input type="text" placeholder="Emri" required><br><br>
               <input type="text" placeholder="Mbiemri" required><br><br>
               <input type="email" placeholder="Email" required><br><br>
               <input type="password" placeholder="Password" required><br><br>
-              <input type="tel" placeholder="Nr.Telefoni" required><br><br>
-              <input type="text" placeholder="Adresa" required><br><br>
+              
           </div>
           <div class="button">
               <button type="submit" class="btn">Sign Up</button>
           </div>
-      </form>
+      </form> -->
+      <form id="form" action="Signup.php" method="POST">
+    <div class="input-box">
+        <input type="text" name="first_name" placeholder="Emri" required><br><br>
+        <input type="text" name="last_name" placeholder="Mbiemri" required><br><br>
+        <input type="email" name="email" placeholder="Email" required><br><br>
+        <input type="password" name="password" placeholder="Password" required><br><br>
+        <input type="hidden" name="role" value="0"> <!-- Default role is user -->
+    </div>
+    <div class="button">
+        <button type="submit" class="btn">Sign Up</button>
+    </div>
+</form>
+  
   </div>
 </div>
     <footer class="footer">
@@ -89,6 +122,5 @@
       </div>
   </div>
   </footer>
-        <script src="validation.js"></script>
     </body>
 </html>
