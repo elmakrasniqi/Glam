@@ -30,7 +30,7 @@ if ($_SESSION['role'] != 1) {
             <li><a href="menage_users.html">Menage Users</a></li>
             <li><a href="menage-products.html">Menage Products</a></li>
             <li><a href="Menage orders.html">Menage Orders</a></li>
-            <li><a href="logout.html">Logout</a></li>
+            <li><a href="../User/LogOut.php">Logout</a></li>
         </ul>
     </nav>
     <section id="admin-dashboard">

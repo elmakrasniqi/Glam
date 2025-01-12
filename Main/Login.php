@@ -14,6 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_id'] = $userData['id'];
         $_SESSION['role'] = $userData['role'];
 
+        // Set cookies for persistent login
+        setcookie('user_email', $email, time() + (86400 * 30), "/"); // Valid for 30 days, accessible across the entire site
+        setcookie('user_id', $userData['id'], time() + (86400 * 30), "/"); // Valid for 30 days, accessible across the entire site
+
         // Redirect to admin or user dashboard
         if ($userData['role'] == 1) {
             header("Location: ../Admin/dashboard.php");

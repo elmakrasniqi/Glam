@@ -34,7 +34,7 @@ if ($_SESSION['role'] != 0) {
             <li><a class="active" href="./homeindex.php">Home</a></li>
             <li><a href="./homeMakeUp.php">Make up</a></li>
             <li><a href="homeAboutUs.php">About Us</a></li>
-            <li><a href="../Main/Login.php">LogOut</a></li>
+            <li><a href="../User/LogOut.php">LogOut</a></li>
        </ul>
     </nav>
 
