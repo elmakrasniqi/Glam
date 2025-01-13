@@ -3,47 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../dashboard.css">
     
     <style>
-        body{
+        body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
     min-height: 100vh;
-    background-color: #f8f8f8;
+    background-color: #f6f0f0; 
 }
+
 h1 {
-    color:#333;
+    color: #333;
 }
 
 .sidebar {
     width: 250px;
-    background-color: #23272b;
+    background-color: rgb(128, 97, 114); /* Light pink sidebar */
     height: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    padding-top:30px;
-    color:white;
+    padding-top: 30px;
+    color: white;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 0 10px 10px 0;
 }
-.sidebar ul{
+
+.sidebar ul {
     list-style-type: none;
     padding: 0;
 }
-.sidebar ul li{
+
+.sidebar ul li {
     padding: 20px;
     text-align: left;
     transition: 0.3s;
 }
+
 .sidebar ul li:hover {
-    background-color: #3b4147; 
+    background-color: rgb(68, 46, 57);
     cursor: pointer;
 }
 
@@ -52,10 +56,11 @@ h1 {
     text-decoration: none;
     font-size: 18px;
 }
-.sidebar ul li i{
-    margin-right: 7px;
 
+.sidebar ul li i {
+    margin-right: 7px;
 }
+
 .content {
     margin-left: 250px;
     padding: 30px;
@@ -67,13 +72,44 @@ h1 {
 }
 
 .content h2 {
-    color: #495057; 
+    color: #495057;
     font-size: 28px;
     margin-bottom: 20px;
 }
 
 .content p {
-    color: #6c757d; 
+    color: #6c757d;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px 18px;
+    text-align: left;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+table th {
+    background-color: #f7d1d1; 
+    color: #333;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1e2e2;
+}
+
+table td {
+    background-color: #fff;
 }
 
 @media screen and (max-width: 768px) {
@@ -83,7 +119,6 @@ h1 {
     .content {
         margin-left: 200px;
     }
-    
 }
 
 @media screen and (max-width: 480px) {
@@ -96,28 +131,28 @@ h1 {
         margin-left: 0;
         width: 100%;
     }
-    
 }
+
     </style>
 </head>
 <body>
     <div class="sidebar">
         <ul>
             <li onclick="showSection('dashboard')">
-                <a href="javascript:void(0)">
+                <a href="dashboard.php">
                 <i class="fas fa-home"></i>Dashboard</a>
             </li>
-            <li onclick="showSection('menage_messages')">
-                <a href="javascript:void(0)">Menage Messages</a>
+            <li onclick="showSection('manage_messages')">
+                <a href="manage_messages.php">Manage Messages</a>
             </li>
             <li onclick="showSection('manage_products')">
-                <a href="javascript:void(0)">Manage Products</a>
+                <a href="manage_products.php">Manage Products</a>
             </li>
             <li onclick="showSection('manage_users')">
-                <a href="javascript:void(0)">Manage Users</a>
+                <a href="manage_users.php">Manage Users</a>
             </li>
             <li >
-                <a href="logout.php">Logout</a>
+                <a href="LogOut.php">Logout</a>
             </li>
         </ul>
     </div>
