@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -100,6 +101,31 @@
   </div>
 </div>
 </footer>
-    <script src="./js/validation.js"></script>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.querySelector('form[action="Login.php"]');
+        loginForm.addEventListener('submit', (event) => {
+            const email = loginForm.querySelector('input[name="email"]').value.trim();
+            const password = loginForm.querySelector('input[name="password"]').value.trim();
+
+            // Regex for email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
+
+            // Validate email
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // Validate password length
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long.');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+        });
+    });
+</script>
 </html>
