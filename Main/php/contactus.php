@@ -1,7 +1,7 @@
 <?php
 class Database {
     private $conn;
-    private $servername = "localhost:3306";
+    private $servername = "localhost:3307";
     private $username = "root";
     private $password = "";
     private $dbname = "glam_db";
@@ -53,17 +53,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
     $contactHandler = new ContactFormHandler();
 
-    if ($contactHandler->submitContactForm($name, $email, $subject, $message)) {
+    if($contactHandler->submitContactForm($name, $email, $subject, $message)) {
+        header("Location: contactus.php?status=success");
+        exit();
+    }else {
+        header ("Location: contactus.php?status=error");
+        exit();
+    }
+}
+
+if(isset($_GET['status'])){
+    if($_GET['status'] == 'success'){
         echo "<div class='thank-you-message'>";
         echo "<p>Thank you for contacting us. We will get back to you as soon as possible. Feel free to ask us for anything you need.</p>";
-        echo "<a href='../ContactUs.html' class='back-link'>Return to Contact Form</a>";
+        echo "<a href='../ContactUs.php' class='back-link'>Return to Contact Form</a>";
         echo "</div>";
-    } else {
+    } elseif ($_GET['status']=='error'){
         echo "<div class='thank-you-message'>";
-        echo "<p>There was an error with your submission. Please try again.</p>";
-        echo "<a href='../ContactUs.html' class='back-link'>Return to Contact Form</a>";
+        echo "<p>There wan an error with your submission. Please try again.</p>";
+        echo "<a href='../ContactUs.php' class='back-link'>Return to Contact Form</a>";
         echo "</div>";
-    }
+ }
 }
 ?>
 <style>
