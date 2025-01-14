@@ -24,11 +24,11 @@
         <img src="../img/heart.png" alt="heart" class="heart">
 
         <ul class="list">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="MakeUp.html">Make Up</a></li>
-            <li><a href="AboutUS.html">About Us</a></li>
-            <li><a class="active" href="ContactUs.html">Contact Us</a></li>
-            <li><a href="Login.html">Login</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="MakeUp.php">Make Up</a></li>
+            <li><a href="AboutUS.php">About Us</a></li>
+            <li><a class="active" href="ContactUs.php">Contact Us</a></li>
+            <li><a href="Login.php">Login</a></li>
         </ul>
     </nav>
     <section id="contact-us">
@@ -77,7 +77,7 @@
                   <h4>Help</h4>
                   <ul>
                       <li><a href="#">Returns</a></li>
-                      <li><a href="../AboutUs.html">About us</a></li>
+                      <li><a href="../AboutUs.php">About us</a></li>
                       <li><a href="#">Shipping</a></li>
                   </ul>
                 </div>

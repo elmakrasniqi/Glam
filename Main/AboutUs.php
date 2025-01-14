@@ -23,10 +23,10 @@
     <img src="../img/heart.png" alt="heart" class="heart">
     
     <ul class="list">
-        <li><a  href="index.html">Home</a></li>
-        <li><a href="MakeUp.html">Make up</a></li>
-        <li><a class="active" href="AboutUs.html">About Us</a></li>
-        <li><a href="Login.html">Login</a></li>
+        <li><a  href="index.php">Home</a></li>
+        <li><a href="MakeUp.php">Make up</a></li>
+        <li><a class="active" href="AboutUs.php">About Us</a></li>
+        <li><a href="Login.php">Login</a></li>
    </ul>
  </nav>
 
@@ -37,7 +37,7 @@
                 <h1>HI BEAUTIFUL,</h1>
                 <img src="../img/heart.png" alt="heart" class="heart2">
              </div>
-             <h3><a href="./Login.html">LOG IN</a> OR <a href="./SignUp.html">SIGN UP</a></h3>
+             <h3><a href="./Login.php">LOG IN</a> OR <a href="./SignUp.php">SIGN UP</a></h3>
          </div>
           
           <div class="about-whole">
@@ -100,7 +100,7 @@
                       <h4>Help</h4>
                       <ul>
                           <li><a href="#">Returns</a></li>
-                          <li><a href="../AboutUs.html">About us</a></li>
+                          <li><a href="../AboutUs.php">About us</a></li>
                           <li><a href="#">Shipping</a></li>
                       </ul>
                     </div>
