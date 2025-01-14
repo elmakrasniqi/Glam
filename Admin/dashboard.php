@@ -1,3 +1,10 @@
+<?php
+session_start();
+if ($_SESSION['role'] != 1) {
+    header("Location: Login.php"); // Redirect to login if the user is not an admin
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,10 +33,10 @@
         <img src="../img/heart.png" alt="heart" class="heart">
         <ul class="list">
             <li><a href="dashboard.html" class="active">Dashboard</a></li>
-            <li><a href="menage_users.htm">Menage Users</a></li>
+            <li><a href="menage_users.html">Menage Users</a></li>
             <li><a href="menage-products.html">Menage Products</a></li>
             <li><a href="Menage orders.html">Menage Orders</a></li>
-            <li><a href="logout.html">Logout</a></li>
+            <li><a href="../User/LogOut.php">Logout</a></li>
         </ul>
     </nav>
     <section id="admin-dashboard">

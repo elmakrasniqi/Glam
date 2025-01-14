@@ -1,3 +1,10 @@
+<?php
+session_start();
+if ($_SESSION['role'] != 0) {
+    header("Location: Login.php"); // Redirect to login if the user is not a regular user
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,10 +31,10 @@
         <img src="../img/heart.png" alt="heart" class="heart">
         
         <ul class="list">
-            <li><a class="active" href="./homeindex.html">Home</a></li>
-            <li><a href="./homeMakeUp.html">Make up</a></li>
-            <li><a href="homeAboutUs.html">About Us</a></li>
-            <li><a href="LogOut.html">LogOut</a></li>
+            <li><a class="active" href="./homeindex.php">Home</a></li>
+            <li><a href="./homeMakeUp.php">Make up</a></li>
+            <li><a href="homeAboutUs.php">About Us</a></li>
+            <li><a href="../User/LogOut.php">LogOut</a></li>
        </ul>
     </nav>
 
@@ -208,7 +215,7 @@
                   <h4>Help</h4>
                   <ul>
                       <li><a href="#">Returns</a></li>
-                      <li><a href="../AboutUs.html">About us</a></li>
+                      <li><a href="../Main/AboutUs.php">About us</a></li>
                       <li><a href="#">Shipping</a></li>
                   </ul>
                 </div>
