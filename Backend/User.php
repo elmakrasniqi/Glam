@@ -30,7 +30,7 @@ class User {
             return $user; // Return the user data
         }
         
-        return false;  
+        return false; // Invalid credentials
     }
 
     // Register method
@@ -41,7 +41,7 @@ class User {
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
-            return false; // email already exists
+            return false; // Email already exists
         }
 
         $sql = "INSERT INTO " . $this->table . " (first_name, last_name, email, password, role) 
@@ -51,7 +51,7 @@ class User {
         $this->first_name = htmlspecialchars(strip_tags($this->first_name));
         $this->last_name = htmlspecialchars(strip_tags($this->last_name));
         $this->email = htmlspecialchars(strip_tags($this->email));
-        $this->password = password_hash($this->password, PASSWORD_BCRYPT); 
+        $this->password = password_hash($this->password, PASSWORD_BCRYPT); // Hash the password
         $this->role = htmlspecialchars(strip_tags($this->role));
 
         $stmt->bindParam(":first_name", $this->first_name);

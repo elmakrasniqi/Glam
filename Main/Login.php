@@ -1,11 +1,42 @@
+<?php
+require_once '../Backend/Admin.php';
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $admin = new Admin();
+    $userData = $admin->login($email, $password);
+
+    if ($userData) {
+        // User login successful
+        $_SESSION['user_id'] = $userData['id'];
+        $_SESSION['role'] = $userData['role'];
+
+        // Set cookies for persistent login
+        setcookie('user_email', $email, time() + (86400 * 30), "/"); // Valid for 30 days, accessible across the entire site
+        setcookie('user_id', $userData['id'], time() + (86400 * 30), "/"); // Valid for 30 days, accessible across the entire site
+
+        // Redirect to admin or user dashboard
+        if ($userData['role'] == 1) {
+            header("Location: ../Admin/dashboard.php");
+        } else {
+            header("Location: ../User/homeindex.php");
+        }
+    } else {
+        echo "Invalid email or password.";
+    }
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login-Glam</title>
-        
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login-Glam</title>
     <link rel="stylesheet" href="./css/logincss.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
       <link rel="stylesheet" href="./css/homecss.css">
@@ -18,49 +49,35 @@
 </head>
 <body>
 
-  <nav>
-    <input type="checkbox" id="checkbox">
-    <label for="checkbox" class="checkbox">
-        <i class="fas fa-bars"></i>
-    </label>
-
-    <label class="logo"  ><a href="index.html">Glam </a></label>
-    <img src="../img/heart.png" alt="heart" class="heart">
-    
-    <ul class="list">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="MakeUp.html">Make up</a></li>
-        <li><a href="AboutUs.html">About Us</a></li>
-        <li><a class="active" href="Login.html">Login</a></li>
-   </ul>
-</nav>
+    <nav>
+        <input type="checkbox" id="checkbox">
+        <label for="checkbox" class="checkbox"><i class="fas fa-bars"></i></label>
+        <label class="logo"><a href="index.html">Glam</a></label>
+        <ul class="list">
+            <li><a href="index.php">Home</a></li>
+            <li><a href="MakeUp.php">Make up</a></li>
+            <li><a href="AboutUs.php">About Us</a></li>
+            <li><a class="active" href="Login.php">Login</a></li>
+        </ul>
+    </nav>
   
-  <!--Login Form-->
-  <div class="login-container">
-    <div class="wrapper">
-        <form action="">
-            <h1>Log In</h1>
-            <div class="input-box">
-                <input type="email" id="email" placeholder="Email" required>
-                <i class='bx bxs-user'></i>
-            </div>
-            <div class="input-box">
-                <input type="password" id="password" placeholder="Password" required>
-                <i class='bx bxs-lock-alt'></i>
-            </div>
-            <div class="remeber-forgot">
-                <label for="remember"><input type="checkbox" id="remember">Remember me</label>
-                <a href="#">Forgot password</a>
-            </div>
-
-            <button type="submit" class="btn">Log in</button>
-
-            <div class="register-link">
-                <p>Don't have an account? <a href="./SignUp.html">Register here</a></p>
-            </div>
-        </form>
+    <div class="login-container">
+        <div class="wrapper">
+            <form action="Login.php" method="POST">
+                <h1>Log In</h1>
+                <div class="input-box">
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="input-box">
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn">Log in</button>
+                <div class="register-link">
+                    <p>Don't have an account? <a href="./SignUp.php">Register here</a></p>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
 <footer class="footer">
   <div class="container">
@@ -101,31 +118,6 @@
   </div>
 </div>
 </footer>
+    <script src="./js/validation.js"></script>
 </body>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const loginForm = document.querySelector('form[action="Login.php"]');
-        loginForm.addEventListener('submit', (event) => {
-            const email = loginForm.querySelector('input[name="email"]').value.trim();
-            const password = loginForm.querySelector('input[name="password"]').value.trim();
-
-            // Regex for email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
-
-            // Validate email
-            if (!emailRegex.test(email)) {
-                alert('Please enter a valid email address.');
-                event.preventDefault(); // Prevent form submission
-                return;
-            }
-
-            // Validate password length
-            if (password.length < 6) {
-                alert('Password must be at least 6 characters long.');
-                event.preventDefault(); // Prevent form submission
-                return;
-            }
-        });
-    });
-</script>
-</html>
+</html
