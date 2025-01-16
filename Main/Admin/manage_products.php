@@ -315,7 +315,7 @@ $products = getAllProducts();
     <div class="admin-dashboard">
         <h2>Manage Products - Admin Dashboard</h2>
 
-        <a href="dashboard.php" class="back-button">
+        <a href="makeup.php" class="back-button">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h3>Add Products</h3>
@@ -348,28 +348,7 @@ $products = getAllProducts();
 
             <button type="submit" name="add_product">Add Product</button>
         </form>
-    <h3>Existing Products</h3>
-    <div class="product-list">
-    <?php foreach ($products as $product): ?>
-        <div class="product-item">
-    <span>
-        <?php echo "{$product['name']} - \${$product['price']} - {$product['brand']}"; ?>
-    </span>
-
-   
-    <?php if ($product['image'] && file_exists($product['image'])): ?>
-        <img src="<?php echo $product['image']; ?>" alt="Product Image" style="max-width: 100px; max-height: 100px;">
-    <?php else: ?>
-        <span>No image available</span>
-    <?php endif; ?>
-
-    <div>
-        <a href="manage_products.php?edit_id=<?php echo $product['id']; ?>">Edit</a> |
-        <a href="manage_products.php?delete_id=<?php echo $product['id']; ?>" onclick="return confirm('Are you sure?');">Delete</a>
-    </div>
-</div>
-
-<?php endforeach; ?>
+    
 
         </div>
     </div>

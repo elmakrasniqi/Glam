@@ -145,8 +145,9 @@ table td {
             <li onclick="showSection('manage_messages')">
                 <a href="manage_messages.php">Manage Messages</a>
             </li>
-            <li onclick="showSection('manage_products')">
-                <a href="manage_products.php">Manage Products</a>
+            <li onclick="showSection('manage_users')">
+                <a href="makeup.php">Make-Up</a>
+            </li>
             </li>
             <li onclick="showSection('manage_users')">
                 <a href="manage_users.php">Manage Users</a>

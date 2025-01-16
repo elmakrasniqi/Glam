@@ -105,47 +105,25 @@ $messageCount = $messageCRUD->getMessageCount();
             color: #333;
         }
 
-        .sidebar {
-            width: 250px;
-            background-color: rgb(128, 97, 114);
-            height: 100%;
+        .back-button {
             position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 30px;
-            color: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 0 10px 10px 0;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            padding: 20px;
-            text-align: left;
-            transition: 0.3s;
-        }
-
-        .sidebar ul li:hover {
-            background-color: rgb(68, 46, 57); 
-            cursor: pointer;
-        }
-
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
+            top: 20px;
+            left: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            padding: 10px;
             font-size: 18px;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .sidebar ul li i {
-            margin-right: 7px;
+        .back-button:hover {
+            background-color: rgb(128, 97, 114);
+            color: white;
         }
-
         .content {
-            margin-left: 250px;
             padding: 30px;
             width: 100%;
             background-color: #fff;
@@ -249,26 +227,9 @@ $messageCount = $messageCRUD->getMessageCount();
     </head>
     <body>
         
-    <div class="sidebar">
-    <ul>
-            <li onclick="showSection('dashboard')">
-                <a href="dashboard.php">
-                <i class="fas fa-home"></i>Dashboard</a>
-            </li>
-            <li onclick="showSection('manage_messages')">
-                <a href="manage_messages.php">Manage Messages</a>
-            </li>
-            <li onclick="showSection('manage_products')">
-                <a href="manage_products.php">Manage Products</a>
-            </li>
-            <li onclick="showSection('manage_users')">
-                <a href="manage_users.php">Manage Users</a>
-            </li>
-            <li >
-                <a href="logout.php">Logout</a>
-            </li>
-        </ul>
-    </div>
+    <a href="dashboard.php" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+        </a>
 
     <div class="content">
         <h2>Manage Messages (Total Messages: <?php echo $messageCount; ?>)</h2>
