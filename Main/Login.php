@@ -79,45 +79,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-<footer class="footer">
-  <div class="container">
-    <div class="map">
-      <img src="../img/map.png" alt="map" >
-    </div>
-    <div class="row">
-          <div class="footer-col">
-             <h4>Adress</h4>
-            <ul>
-                <li><a href="#">At Bulevardi Bill Clinton <br>
-                  Prishtinë, Kosovë<br>
-                 +383 49 241 241 <br></a>
-                 </li>
-                <li><a href="#">glamglow@gmail.com</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">  
-            <h4>Help</h4>
-            <ul>
-                <li><a href="#">Returns</a></li>
-                <li><a href="../AboutUs.html">About us</a></li>
-                <li><a href="#">Shipping</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-             <h4>Follow us</h4>
-           <div class="social-links">
-              <a href="#"><i class="fab fa-facebook-f"></i></a>
-              <a href="#"><i class="fab fa-x"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-      </div>
-  </div>
-  <div class="copyrights">
-    <p style="color: rgb(119, 119, 119);">Copyright © 2024 Glam.All rights reserved!</p>
-  </div>
-</div>
-</footer>
-    <script src="./js/validation.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.querySelector('form[action="Login.php"]');
+        loginForm.addEventListener('submit', (event) => {
+            const email = loginForm.querySelector('input[name="email"]').value.trim();
+            const password = loginForm.querySelector('input[name="password"]').value.trim();
+
+            // Regex for email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
+
+            // Validate email
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // Validate password length
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long.');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+        });
+    });
+</script>
+
 </body>
-</html
+</html>
