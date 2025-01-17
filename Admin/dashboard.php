@@ -65,6 +65,29 @@ $productCount = count($products);
 $messageCrud = new MessageCRUD($conn);
 $messageCount = $messageCrud->getMessageCount($conn);
 
+class WeeklyStats {
+
+private $conn;
+
+public function __construct($conn) {
+    $this->conn = $conn;
+}
+
+public function getWeeklyProductCount() {
+    $sql = "SELECT COUNT(*)FROM products WHERE created_at > DATE_SUB(NOW(), INTERVAL 1 WEEK)";
+    $stmt = $this->conn->query($sql);
+    return  $stmt->fetchColumn();
+}
+
+public function getWeeklyMessageCount() {
+    $sql = "SELECT COUNT(*)FROM contacts WHERE created_at > DATE_SUB(NOW(), INTERVAL 1 WEEK)";
+    $stmt = $this->conn->query($sql);
+    return  $stmt->fetchColumn();
+    }
+}
+$weelkyStats = new WeeklyStats($conn);
+$weeklyProducts = $weelkyStats->getWeeklyProductCount();
+$weeklyMessages = $weelkyStats->getWeeklyMessageCount();
 ?>
 
 <!DOCTYPE html>
@@ -76,7 +99,7 @@ $messageCount = $messageCrud->getMessageCount($conn);
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../dashboard.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -153,7 +176,7 @@ $messageCount = $messageCrud->getMessageCount($conn);
       
         .stats-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             margin-top: 40px;
             gap: 20px;
         }
@@ -163,8 +186,9 @@ $messageCount = $messageCrud->getMessageCount($conn);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 48%;
+            width: 30%;
             text-align: center;
+            margin-bottom: 20px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -190,75 +214,94 @@ $messageCount = $messageCrud->getMessageCount($conn);
             color: #555;
             margin-top: 5px;
         }
-
-        @media screen and (max-width: 768px) {
-            .stats-container {
-                flex-direction: column;
-            }
-            .stat-card {
-                width: 100%;
-                margin-bottom: 20px;
-            }
+        canvas {
+            width: 100% !imortant;
+            max-width: 600px;
+            border-radius: 10px;
+            justify-content: center;
+            align-items: center;
         }
+       
+     @media screen and (max-width: 768px) {
+    .sidebar {
+        width: 120px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+    .content {
+        margin-left: 120px;
+    }
+    .content h2{
+        font-size:20px;
 
-        table th, table td {
-            padding: 12px 18px;
-            text-align: left;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
+    }
+    
 
-        table th {
-            background-color: #f7d1d1; 
-            color: #333;
-        }
+    .stats-container {
+        flex-direction: column;
+        align-items: center;
+    }
 
-        table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+    .stat-card {
+        width: 70%;
+        margin-bottom: 20px;
+        height: 115px; 
+    }
 
-        table tr:hover {
-            background-color: #f1e2e2;
-        }
+    .weekly-activity {
+        width: 100%;
+        margin-top: 60px; 
+        border-radius: 10px;
+        padding: 20px;
+        height: auto;
+        min-height: 300px;
+    }
 
-        table td {
-            background-color: #fff;
-        }
+    canvas {
+        max-width: 100%;
+        max-width:300px;
+        height: 300px;
+    }
+}
 
-        @media screen and (max-width: 768px) {
-            .sidebar {
-                width: 200px;
-            }
-            .content {
-                margin-left: 200px;
-            }
-        }
+@media screen and (max-width: 480px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+    }
 
-        @media screen and (max-width: 480px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-            .content {
-                margin-left: 0;
-                width: 100%;
-            }
-            .stats {
-                flex-direction: column;
-                align-items: center;
-            }
-            .stat-box {
-                width: 80%;
-                margin-bottom: 20px;
-            }
-        }
+    .content {
+        margin-left: 0;
+        width: 80%;
+        padding: 15px;
+    }
+
+    .stats-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .stat-card {
+        width: 90%;
+        height: 70px; 
+    }
+
+    .weekly-activity {
+        width: 100%;
+        margin-top: 60px; 
+        border-radius: 10px;
+        padding: 20px;
+        height: auto;
+        min-height: 300px;
+    }
+
+    canvas {
+        max-width: 100%;
+        max-width:300px;
+        height: 300px;
+    }
+}
 
     </style>
 </head>
@@ -299,9 +342,36 @@ $messageCount = $messageCrud->getMessageCount($conn);
                     <i class="fas fa-comment-dots stat-icon"></i>
                     <h3>Total Messages</h3>
                     <p><?php echo $messageCount; ?> Messages</p> 
-                </div>
+        </div>
+    </div>
+<div class="weekly-activity">
+    <h2>Weekly Activity</h2>
+    <canvas id="activityChart" width="600" height="100"></canvas>
+    <script>
+        var ctx = document.getElementById('activityChart').getContext('2d');
+        var activityChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Products Added', 'Messages Received'],
+                datasets: [{
+                    label:'Weekly Activity',
+                    data:[<?php echo $weeklyProducts;?>, <?php echo $weeklyMessages?>],
+                    backgroundColor:['rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)'],
+                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
+                    borderWidth: 1
+                        }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+                </script>
             </div>
-
         </div>
     </div>
 </body>

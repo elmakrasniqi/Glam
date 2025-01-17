@@ -94,134 +94,201 @@ $messageCount = $messageCRUD->getMessageCount();
 
 
         <style>
-         
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            min-height: 100vh;
-            background-color: #f4f4f4;
-            color: #333;
-        }
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+    color: #333;
+}
 
-        .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 50%;
-            padding: 10px;
-            font-size: 18px;
-            color: #333;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-        .back-button:hover {
-            background-color: rgb(128, 97, 114);
-            color: white;
-        }
-        .content {
-            padding: 30px;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
+.back-button:hover {
+    background-color: rgb(128, 97, 114);
+    color: white;
+}
 
-        h2 {
-            font-size: 1.8rem;
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+.content {
+    padding: 30px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
 
-        .message-detail {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #fafafa;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+h2 {
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-            font-size: 16px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+.message-detail {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-        table, th, td {
-            border: 1px solid #ddd;
-            padding: 12px 15px;
-            text-align: center;
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    font-size: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    table-layout: fixed;
+}
 
-        th {
-            background-color: rgb(166, 136, 152);
-            color: #495057;
-            font-weight: 500;
-        }
+table, th, td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: center;
+}
 
-        td {
-            background-color: #fff;
-            color: #6c757d;
-        }
+th {
+    background-color: rgb(166, 136, 152);
+    color: #495057;
+    font-weight: 500;
+}
 
-        tr:hover {
-            background-color: #f1e2e2;
-        }
+td {
+    background-color: #fff;
+    color: #6c757d;
+}
 
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
+tr:hover {
+    background-color: #f1e2e2;
+}
 
-        .action-buttons a {
-            border-radius: 8px;
-            padding: 8px 15px;
-            background-color: rgb(128, 97, 114);
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-        }
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
 
-        .action-buttons a:hover {
-            background-color: #5a6268;
-        }
+.action-buttons a {
+    border-radius: 8px;
+    padding: 10px 12px;
+    background-color: rgb(128, 97, 114);
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
 
-        .action-buttons a.delete {
-            background-color: rgb(193, 107, 104);
-        }
+.action-buttons a:hover {
+    background-color: #5a6268;
+}
 
-        .action-buttons a.delete:hover {
-            background-color: rgb(186, 91, 88);
-        }
+.action-buttons a.delete {
+    background-color: rgb(193, 107, 104);
+}
 
-        .message-detail a {
-            color: rgb(128, 97, 114);
-            text-decoration: none;
-            
-            
-        }
+.action-buttons a.delete:hover {
+    background-color: rgb(186, 91, 88);
+}
 
-        @media screen and (max-width: 768px) {
-            .sidebar {
-                width: 0;
-            }
-            .content {
-                margin-left: 0;
-            }
-            .sidebar.active {
-                width: 250px;
-            }
-        }
+.message-detail a {
+    color: rgb(128, 97, 114);
+    text-decoration: none;
+}
+
+@media screen and (max-width: 768px) {
+    
+    .content h2 {
+        font-size: 20px;
+    }
+
+    .message-detail {
+        padding: 15px;
+    }
+
+    .back-button {
+        top: 15px;
+        left: 15px;
+        font-size: 16px;
+    }
+        
+
+    th, td {
+        padding: 15px 10px;
+        font-size: 12px;
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-direction: column; 
+        gap: 10px;
+        justify-content: center;
+        align-items: center; 
+    }
+
+    .action-buttons a {
+        font-size: 12px;
+        padding: 6px 10px;
+        width: 80%; 
+        text-align: center; 
+    }
+
+    .action-buttons a.delete {
+        font-size: 12px;
+        padding: 6px 10px;
+        width: 80%; 
+    }
+
+    .message-detail a {
+        font-size: 14px;
+    }
+
+    .message-detail {
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .message-detail {
+        padding: 10px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    .back-button {
+        top: 15px;
+        left: 15px;
+        font-size: 16px;
+    }
+
+    .message-detail a {
+        font-size: 14px;
+    }
+
+    .action-buttons a {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+}
+
+
     </style>
 
     </head>
