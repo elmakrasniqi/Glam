@@ -137,12 +137,12 @@ $products = getAllProducts();
             background-color: rgb(165, 130, 150);
             margin: 0;
             padding: 0;
-            padding-top: 40px
+            padding-top: 40px;
         }
         .admin-dashboard {
             top:10px;
             padding: 40px;
-            max-width: 800px;
+            max-width: 600px;
             margin: auto;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -150,7 +150,7 @@ $products = getAllProducts();
         }
 
         h2 {
-            margin-top:20px;
+            margin-top:18px;
             color: #333;
             font-size: 30px;
             text-align: center;
@@ -186,7 +186,6 @@ $products = getAllProducts();
             flex-direction: column;
             gap: 15px;
             margin-bottom: 30px;
-            max-width: 100%;
         }
 
         label {
@@ -235,34 +234,6 @@ $products = getAllProducts();
             margin-top: 30px;
         }
 
-        .product-item {
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            box-sizing: border-box;
-        }
-
-        .product-item span {
-            flex-grow: 1;
-        }
-
-        .product-item a {
-            color:red;
-            text-decoration: none;
-            font-size: 14px;
-            margin-left: 10px;
-        }
-
-        .product-item a:hover {
-            text-decoration: underline;
-        }
-
         .footer {
             background-color: rgb(165, 130, 150);
             text-align: center;
@@ -277,23 +248,24 @@ $products = getAllProducts();
         @media screen and (max-width: 768px) {
             .admin_dashboard {
                 padding: 20px;
+
+
             }
             form{
                 margin-bottom: 20px;
+                padding: 20px;
             }
-            .product-list {
-                margin-top: 20px;
-            }
-            .product-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .,product-item span {
-                margin-bottom: 10px;
-            }
+            
             button {
                 width: auto;
                 margin-top: 20px;
+            }
+            .back-button {
+                border-radius: 50%;
+                padding: 8px;
+                font-size: 15px;
+                top: 3px;
+                 left: 10px;
             }
         }
         @media screen and (max-width: 480px) {
