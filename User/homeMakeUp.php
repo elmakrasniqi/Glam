@@ -276,7 +276,7 @@
     </div>
     </footer>
         
-    <script src="js/Makeup.js" type="text/javascript"></script>
+    <script src="../Main/js/Makeup.js" type="text/javascript"></script>
 </body>
 </html>
 
