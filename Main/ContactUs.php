@@ -1,3 +1,60 @@
+<?php
+class Database {
+    private $conn;
+    private $servername = "localhost:3307";
+    private $username = "root";
+    private $password = "";
+    private $dbname = "glam_db";
+
+    public function connect() {
+        try {
+            $this->conn = new PDO("mysql:host=$this->servername;dbname=$this->dbname", $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+        return $this->conn;
+    }
+
+    public function close() {
+        $this->conn = null;
+    }
+}
+
+    class ReplyCRUD{
+        private $conn;
+
+        public function __construct($conn) {
+
+            $this->conn = $conn;
+        }
+    
+    public function getRepliesByMessageId($messageId) {
+        $sql = "SELECT * FROM replies WHERE message_id = :message_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':message_id', $messageId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getMessagesWithReplies() {
+        $sql = "SELECT DISTINCT contacts.*
+                FROM contacts
+                JOIN replies ON contacts.id = replies.message_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+}
+
+   $db= new Database();
+   $conn = $db->connect();
+   $replyCRUD = new ReplyCRUD($conn);
+ 
+
+   $messagesWithReplies = $replyCRUD->getMessagesWithReplies();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,9 +68,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./css/headercss.css">
     <link rel="stylesheet" href="./css/homecss.css">
-    <link rel="stylesheet" href="css/contactus.css">
+    <link rel="stylesheet" href="./css/contactus.css">
     
-
     
 </head>
 <body>
@@ -52,13 +108,49 @@
                 </div>
                 <div class="form-group">
                     <label for="message">Message</label>
-                    <textarea name="message" id="message" required placeholder="Write your message here..."> </textarea>
+                    <textarea name="message" id="message" required placeholder="Write your message here..."></textarea>
                 </div>
                 <button  name="submit" type="submit">Send Message</button>
             </form>
         </div>
-        
-    </section>
+</section>
+
+    <button id="reply-btn" class="reply-btn">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+
+    <div id="replies-section" class="replies-section">
+        <a href="ContactUs.php" id="back-btn" class="back-btn">
+            ←
+        </a>
+            <?php if (count($messagesWithReplies)>0): ?>
+                <?php foreach ($messagesWithReplies as $message): ?>
+                    <div class="message-container">
+                        <h3>Message from: <?php echo htmlspecialchars($message['name']); ?></h3>
+                        <p><strong>Subject:</strong> <?php echo htmlspecialchars($message['subject']); ?></p>
+                        <p><strong>Message: </strong> <?php echo nl2br(htmlspecialchars($message['message'])); ?></p>
+                        
+                        <?php
+                        $replies = $replyCRUD->getRepliesByMessageId($message['id']);
+                        if(count($replies) > 0): ?>
+
+                        <ul>
+                    <?php foreach ($replies as $reply): ?>
+                    <li>
+                    <h3>Replies: </h3>
+                    <p style="margin-bottom: 15px;"><?php echo nl2br(htmlspecialchars($reply['reply'])); ?></p>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php else: ?>
+                    <p>No replies yet.</p>
+                    <?php endif; ?>
+                </div>   
+                    <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>No messages with replies found.</p>
+                            <?php endif; ?>
+        </div>
     <footer class="footer">
         <div class="container">
           <div class="map">
@@ -98,5 +190,14 @@
         </div>
     </div>
     </footer>
+
+    <script>
+        const replyBtn = document.getElementById('reply-btn');
+        const repliesSection = document.getElementById('replies-section');
+
+        replyBtn.addEventListener('click', function(){
+            repliesSection.classList.toggle('show');
+        });
+    </script>
 </body>
 </html>

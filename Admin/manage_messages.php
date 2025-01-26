@@ -57,11 +57,34 @@ class MessageCRUD {
         return $stmt->fetchAll();
     }
 }
+class ReplyCRUD {
+    private $conn;
+    public function __construct($conn) {
+        $this->conn = $conn;
+    }
+    public function getRepliesByMessageId($messageId) {
+    $sql = "SELECT * FROM replies WHERE message_id = :message_id";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':message_id', $messageId, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+    public function addReply($messageId, $reply) {
+        $sql = "INSERT INTO replies (message_id, reply) VALUES (:message_id, :reply)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':message_id', $messageId, PDO::PARAM_INT);
+        $stmt->bindParam(':reply', $reply, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+}
 
 $db = new Database();
 $conn = $db->connect();
 
 $messageCRUD = new MessageCRUD($conn);
+$replyCRUD = new ReplyCRUD($conn);
+
 $messages = [];
 $messageCount = $messageCRUD->getMessageCount();
 
@@ -71,7 +94,20 @@ $messageCount = $messageCRUD->getMessageCount();
             header("Location: manage_messages.php");
             exit();
         } elseif ($_GET['action'] == 'view' && isset($_GET['id'])){
-            $message = $messageCRUD->getMessageById($_GET['id']);
+            $messageId = $_GET['id'];
+
+            $message = $messageCRUD->getMessageById($messageId);
+
+
+            if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reply'])){
+                $reply = htmlspecialchars($_POST['reply']);
+                $replyCRUD->addReply($messageId, $reply);
+
+                header("Location: manage_messages.php?action=view&id=$messageId");
+                exit();
+            }
+
+            $replies = $replyCRUD->getRepliesByMessageId($messageId);
         }
     } else {
         $messages = $messageCRUD->getAllMessages();
@@ -210,6 +246,39 @@ tr:hover {
     color: rgb(128, 97, 114);
     text-decoration: none;
 }
+.reply-section {
+    margin-top:20px;
+}
+.reply-section label {
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+}
+.reply-section textarea {
+    width: 60%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
+}
+
+.reply-section button {
+    background-color: rgb(128, 97, 114);
+    color: white;
+    font-size: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin-top: 6px;
+    margin-bottom: 10px;
+}
+.reply-section button:hover {
+    background-color: #5a6268;
+}
 
 @media screen and (max-width: 768px) {
     
@@ -261,6 +330,10 @@ tr:hover {
     .message-detail {
         padding: 15px;
     }
+    .reply-section button {
+        font-size: 10px;
+        padding: 9px 12px;
+    }
 }
 
 @media screen and (max-width: 480px) {
@@ -286,6 +359,10 @@ tr:hover {
         font-size: 12px;
         padding: 5px 8px;
     }
+    .reply-section button {
+        font-size: 14px;
+        padding: 8px 9px;
+    }
 }
 
 
@@ -293,11 +370,11 @@ tr:hover {
 
     </head>
     <body>
-        
+    <?php if(!isset($_GET['action']) || $_GET['action'] !== 'view'): ?>
     <a href="dashboard.php" class="back-button">
             <i class="fas fa-arrow-left"></i>
         </a>
-
+    <?php endif; ?>
     <div class="content">
         <h2>Manage Messages (Total Messages: <?php echo $messageCount; ?>)</h2>
         
@@ -309,6 +386,26 @@ tr:hover {
                 <p><strong>Subject:</strong> <?php echo htmlspecialchars($message['subject']); ?></p>
                 <p><strong>Message:</strong> <?php echo nl2br(htmlspecialchars($message['message'])); ?></p>
                 <p><strong>Date:</strong> <?php echo $message['created_at']; ?></p>
+                
+                <h4>Replies:</h4>
+                <?php if (count($replies)>0): ?>
+                    <ul>
+                    <?php foreach ($replies as $reply): ?>
+                        <li>
+                            <p><?php echo nl2br(htmlspecialchars($reply['reply'])); ?></p>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p>No replies yet.</p>
+            <?php endif; ?>
+            <h4>Admin Reply:</h4>
+            <form method="POST" class="reply-section">
+                <label for="reply">Your Reply:</label>
+                <textarea name="reply" id="reply" rows="4" placeholder="Type your reply here..." required></textarea>
+                <button type="submit">Send Reply</button>
+            </form>
+                
                 <a href="manage_messages.php">Back to Messages</a>
             </div>
 
