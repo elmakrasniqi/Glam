@@ -1,7 +1,7 @@
 <?php
 class Database {
     private $conn;
-    private $servername = "localhost:3307";
+    private $servername = "localhost";
     private $username = "root";
     private $password = "";
     private $dbname = "glam_db";  
@@ -322,7 +322,7 @@ $weeklyMessages = $weelkyStats->getWeeklyMessageCount();
                 <a href="manage_users.php">Manage Users</a>
             </li>
             <li>
-                <a href="LogOut.php">Logout</a>
+                <a href="../User/LogOut.php">LogOut</a>
             </li>
         </ul>
     </div>

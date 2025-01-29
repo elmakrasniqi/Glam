@@ -19,7 +19,7 @@
         <i class="fas fa-bars"></i>
     </label>
 
-    <label class="logo"  ><a href="index.html">Glam </a></label>
+    <label class="logo"  ><a href="homeindex.php">Glam </a></label>
     <img src="../img/heart.png" alt="heart" class="heart">
     
     <ul class="list">
