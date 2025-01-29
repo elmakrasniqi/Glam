@@ -54,10 +54,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $contactHandler = new ContactFormHandler();
 
     if($contactHandler->submitContactForm($name, $email, $subject, $message)) {
-        header("Location: contactus.php?status=success");
+        header("Location: thank-you-message.php?status=success");
         exit();
     }else {
-        header ("Location: contactus.php?status=error");
+        header ("Location: thank-you-message.php?status=error");
         exit();
     }
 }
@@ -66,17 +66,19 @@ if(isset($_GET['status'])){
     if($_GET['status'] == 'success'){
         echo "<div class='thank-you-message'>";
         echo "<p>Thank you for contacting us. We will get back to you as soon as possible. Feel free to ask us for anything you need.</p>";
-        echo "<a href='../ContactUs.php' class='back-link'>Return to Contact Form</a>";
+        echo "<a href='../Main/ContactUs.php' class='back-link'>Return to Contact Form</a>";
         echo "</div>";
     } elseif ($_GET['status']=='error'){
         echo "<div class='thank-you-message'>";
         echo "<p>There wan an error with your submission. Please try again.</p>";
-        echo "<a href='../ContactUs.php' class='back-link'>Return to Contact Form</a>";
+        echo "<a href='../Main/ContactUs.php' class='back-link'>Return to Contact Form</a>";
         echo "</div>";
  }
 }
 ?>
+
 <style>
+
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600&display=swap');
 

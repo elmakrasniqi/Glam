@@ -93,7 +93,7 @@ class Database {
         <div class="contact-container">
             <h1>Contact Us</h1>
 
-            <form id="contact-form" action="../Main/php/contactus.php" method="POST">
+            <form id="contact-form" action="../Main/thank-you-message.php" method="POST">
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" required placeholder="Enter your full name">

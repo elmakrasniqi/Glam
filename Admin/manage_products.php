@@ -34,6 +34,7 @@ function uploadImage($file) {
     }
     $target_file =  $target_dir . basename($file["name"]);
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $imagePath = $target_file;
 
     if(getimagesize($file["tmp_name"])==false) {
         return "File is not an image.";
@@ -48,6 +49,7 @@ function uploadImage($file) {
         return "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
     }
     if(move_uploaded_file($file["tmp_name"], $target_file)){
+       echo "File uploaded successfully! File path: $target_file";
         return $target_file;
     }else {
         return"Sorry, there was an error uploading your file.";
@@ -82,11 +84,11 @@ if(isset($_POST['add_product'])) {
     
         }
 
+        if($image !== null) {
+
         $db = new Database();
         $conn = $db->connect();
-        
         $sql = "INSERT INTO products (name, price, brand, image) VALUES (:name, :price, :brand, :image)";
-        
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':price', $price);
@@ -96,7 +98,7 @@ if(isset($_POST['add_product'])) {
 
         $db->close();
     }
-
+    }
     
    
     $products = getAllProducts();
@@ -115,6 +117,25 @@ if (isset($_GET['delete_id'])) {
     
     header("Location: manage_products.php");
     exit();
+}
+
+if(isset($_GET['edit_id'])) {
+    $edit_id = $_GET['edit_id'];
+
+    $db = new Database();
+    $conn = $db->connect();
+    $sql = "SELECT * FROM products WHERE id = :id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id', $edit_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+    $db->close();
+
+    if(!$product) {
+        echo "Product not found!";
+        exit;
+    }
+    
 }
 
 $products = getAllProducts();
@@ -287,39 +308,43 @@ $products = getAllProducts();
     <div class="admin-dashboard">
         <h2>Manage Products - Admin Dashboard</h2>
 
-        <a href="makeup.php" class="back-button">
+        <a href="addproducts.php" class="back-button">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h3>Add Products</h3>
+        <h3><?php echo isset($product) ? "Edit Product" : "Add Product"; ?></h3>
 
         <form method="POST" action="manage_products.php" enctype="multipart/form-data">
+            <?php if(isset($product)): ?>
+                <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+            <?php endif; ?>
+            
             <label for="product_name">Product Name</label>
-            <input type="text" id="product_name" name="product_name" required>
+            <input type="text" id="product_name" name="product_name" required value="<?php echo isset($product) ? $product['name'] : ''; ?>">
 
             <label for="product_price">Price</label>
-            <input type="number" id="product_price" name="product_price" required>
+            <input type="number" id="product_price" name="product_price" required value="<?php echo isset($product) ? $product['price'] : ''; ?>">
 
             <label for="product_brand">Brand</label>
-            <input type="text" id="product_brand" name="product_brand" required>
+            <input type="text" id="product_brand" name="product_brand" required value="<?php echo isset($product) ? $product['brand'] : ''; ?>">
 
-            <label for="image_option">Image Option</label>
-            <input type="radio" id="file_option" name="image_option" value="file" onclick="toggleImageInput(true);" checked>
-            <label for="file_option">Choose a File</label>
-            <input type="radio" id="url_option" name="image_option" value="url" onclick="toggleImageInput(false);">
-            <label for="url_option">Add a Link</label>
+            <label for="image_option">Image Upload Option:</label><br>
+    <input type="radio" id="image_option_url" name="image_option" value="url" <?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? 'checked' : ''; ?>> URL
+    <input type="radio" id="image_option_file" name="image_option" value="file" <?php echo isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL) ? 'checked' : ''; ?>> File<br><br>
 
-            <div id="file_input" class="image-input">
-                <label for="product_image">Product Image</label>
-                <input type="file" id="product_image" name="product_image" accept="image/*">
-            </div>
+    <div id="url_input" style="display: <?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? 'block' : 'none'; ?>;">
+        <label for="image_url">Product Image URL:</label><br>
+        <input type="text" id="image_url" name="image_url" placeholder="Enter image URL" value="<?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? $product['image'] : ''; ?>"><br><br>
+    </div>
 
-            <div id="url_input" class="image-input" style="display: none;">
-                <label for="image_url">Image URL</label>
-                <input type="text" id="image_url" name="image_url" placeholder="Enter image URL">
-            </div>
+    <div id="file_input" style="display: <?php echo isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL) ? 'block' : 'none'; ?>;">
+        <label for="product_image">Product Image (File):</label><br>
+        <input type="file" id="product_image" name="product_image"><br><br>
+    </div>
 
-            <button type="submit" name="add_product">Add Product</button>
-        </form>
+    <button type="submit" name="<?php echo isset($product) ? 'update_product' : 'add_product'; ?>">
+                <?php echo isset ($product)? 'Update Product' : 'Add Product'; ?>
+            </button>
+</form>
     
 
         </div>
@@ -330,15 +355,17 @@ $products = getAllProducts();
     </footer>
 
     <script>
-        function toggleImageInput(showFileInput) {
-            if(showFileInput) {
-                document.getElementById('file_input').style.display = 'block';
-                document.getElementById('url_input').style.display = 'none';
-            } else {
-                document.getElementById('file_input').style.display = 'none';
-                document.getElementById('url_input').style.display = 'block';
-            }
+        document.querySelectorAll('input[name="image_option"]').forEach((radio) => {
+    radio.addEventListener('change', function() {
+        if (document.getElementById('image_option_url').checked) {
+            document.getElementById('url_input').style.display = 'block';
+            document.getElementById('file_input').style.display = 'none';
+        } else {
+            document.getElementById('url_input').style.display = 'none';
+            document.getElementById('file_input').style.display = 'block';
         }
+    });
+});
     </script>
 </body>
 </html>

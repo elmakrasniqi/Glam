@@ -54,6 +54,19 @@ class ProductCRUD {
         return $stmt->fetchColumn();
     }
 }
+class UserCRUD {
+    private $conn;
+
+    public function __construct($conn) {
+        $this->conn = $conn;
+    }
+
+    public function getUserCount() {
+        $sql = "SELECT COUNT(*) FROM users";
+        $stmt = $this->conn->query($sql);
+        return $stmt->fetchColumn();
+    }
+}
 $db = new Database();
 $conn = $db->connect();
 
@@ -64,6 +77,9 @@ $productCount = count($products);
 
 $messageCrud = new MessageCRUD($conn);
 $messageCount = $messageCrud->getMessageCount($conn);
+
+$userCrud = new UserCRUD($conn);  
+$userCount = $userCrud->getUserCount(); 
 
 class WeeklyStats {
 
@@ -84,10 +100,17 @@ public function getWeeklyMessageCount() {
     $stmt = $this->conn->query($sql);
     return  $stmt->fetchColumn();
     }
+
+public function getWeeklyUserCount(){
+    $sql = "SELECT COUNT(*) FROM users WHERE created_at > DATE_SUB(NOW(), INTERVAL 1 WEEK)";
+    $stmt = $this->conn->query($sql);
+    return $stmt->fetchColumn();
+    }
 }
 $weelkyStats = new WeeklyStats($conn);
 $weeklyProducts = $weelkyStats->getWeeklyProductCount();
 $weeklyMessages = $weelkyStats->getWeeklyMessageCount();
+$weeklyUsers = $weelkyStats->getWeeklyUserCount();
 ?>
 
 <!DOCTYPE html>
@@ -214,6 +237,18 @@ $weeklyMessages = $weelkyStats->getWeeklyMessageCount();
             color: #555;
             margin-top: 5px;
         }
+        .weekly-activity {
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+            padding: 10px;
+            height: auto;
+            min-height: 200px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
         canvas {
             width: 100% !imortant;
             max-width: 600px;
@@ -223,12 +258,13 @@ $weeklyMessages = $weelkyStats->getWeeklyMessageCount();
         }
        
      @media screen and (max-width: 768px) {
-    .sidebar {
+        .sidebar {
         width: 120px;
     }
 
     .content {
         margin-left: 120px;
+        overflow: hidden;
     }
     .content h2{
         font-size:20px;
@@ -261,6 +297,7 @@ $weeklyMessages = $weelkyStats->getWeeklyMessageCount();
         max-width:300px;
         height: 300px;
     }
+    
 }
 
 @media screen and (max-width: 480px) {
@@ -288,12 +325,10 @@ $weeklyMessages = $weelkyStats->getWeeklyMessageCount();
     }
 
     .weekly-activity {
-        width: 100%;
-        margin-top: 60px; 
-        border-radius: 10px;
-        padding: 20px;
-        height: auto;
-        min-height: 300px;
+        margin-top: 20px;
+        min-height: 250px;
+        padding: 8px;
+        height:auto;
     }
 
     canvas {
@@ -316,7 +351,7 @@ $weeklyMessages = $weelkyStats->getWeeklyMessageCount();
                 <a href="manage_messages.php">Manage Messages</a>
             </li>
             <li onclick="showSection('manage_users')">
-                <a href="makeup.php">Make-Up</a>
+                <a href="addproducts.php">Make-Up</a>
             </li>
             <li onclick="showSection('manage_users')">
                 <a href="manage_users.php">Manage Users</a>
@@ -342,7 +377,12 @@ $weeklyMessages = $weelkyStats->getWeeklyMessageCount();
                     <i class="fas fa-comment-dots stat-icon"></i>
                     <h3>Total Messages</h3>
                     <p><?php echo $messageCount; ?> Messages</p> 
-        </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users stat-icon"></i>
+                    <h3>Total Users</h3>
+                    <p><?php echo $userCount; ?> Users</p> 
+                 </div>
     </div>
 <div class="weekly-activity">
     <h2>Weekly Activity</h2>
@@ -352,12 +392,12 @@ $weeklyMessages = $weelkyStats->getWeeklyMessageCount();
         var activityChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Products Added', 'Messages Received'],
+                labels: ['Products Added', 'Messages Received', 'Users Registered'],
                 datasets: [{
                     label:'Weekly Activity',
-                    data:[<?php echo $weeklyProducts;?>, <?php echo $weeklyMessages?>],
-                    backgroundColor:['rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)'],
-                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
+                    data:[<?php echo $weeklyProducts;?>, <?php echo $weeklyMessages?>, <?php echo $weeklyUsers;?>],
+                    backgroundColor:['rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)',  'rgba(255, 159, 64, 0.2)'],
+                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)',  'rgba(255, 159, 64, 1)'],
                     borderWidth: 1
                         }]
             },
