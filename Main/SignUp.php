@@ -1,5 +1,6 @@
 <?php
 require_once '../Backend/User.php';
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = new User();
@@ -17,13 +18,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Try to register the user
         if ($user->register()) {
-            echo "Registration successful!";
+            // Get user data after registration
+            $userData = $user->getUserByEmail($user->email); // Implement this function in your User class
+
+            if ($userData) {
+                // Set session variables
+                $_SESSION['user_id'] = $userData['id'];
+                $_SESSION['role'] = $userData['role'];
+
+                // Set cookies for persistent login
+                setcookie('user_email', $user->email, time() + (86400 * 30), "/");
+                setcookie('user_id', $userData['id'], time() + (86400 * 30), "/");
+
+                // Redirect to dashboard based on role
+                if ($userData['role'] == 1) {
+                    header("Location: ../Admin/dashboard.php");
+                } else {
+                    header("Location: ../User/homeindex.php");
+                }
+                exit;
+            }
         } else {
             echo "Registration failed. Email may already be in use.";
         }
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -106,5 +127,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p style="color: rgb(119, 119, 119);">Copyright © 2024 Glam. All rights reserved!</p>
         </div>
     </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const signupForm = document.querySelector('form[action="Signup.php"]');
+        signupForm.addEventListener('submit', (event) => {
+            const firstName = signupForm.querySelector('input[name="first_name"]').value.trim();
+            const lastName = signupForm.querySelector('input[name="last_name"]').value.trim();
+            const email = signupForm.querySelector('input[name="email"]').value.trim();
+            const password = signupForm.querySelector('input[name="password"]').value.trim();
+
+            // Regex for email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
+
+            // Regex for name validation (only letters, spaces, and dashes allowed)
+            const nameRegex = /^[a-zA-Z\s-]+$/;
+
+            // Validate first name
+            if (!nameRegex.test(firstName)) {
+                alert('First name can only contain letters, spaces, and dashes.');
+                event.preventDefault();
+                return;
+            }
+
+            // Validate last name
+            if (!nameRegex.test(lastName)) {
+                alert('Last name can only contain letters, spaces, and dashes.');
+                event.preventDefault();
+                return;
+            }
+
+            // Validate email
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                event.preventDefault();
+                return;
+            }
+
+            // Validate password length
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long.');
+                event.preventDefault();
+                return;
+            }
+        });
+    });
+</script>
 </body>
 </html>

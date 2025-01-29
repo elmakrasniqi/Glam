@@ -336,7 +336,7 @@ $weeklyUsers = $weelkyStats->getWeeklyUserCount();
                 <a href="manage_users.php">Manage Users</a>
             </li>
             <li>
-                <a href="LogOut.php">Logout</a>
+                <a href="../User/LogOut.php">LogOut</a>
             </li>
         </ul>
     </div>
