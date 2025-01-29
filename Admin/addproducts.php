@@ -1,31 +1,10 @@
 <?php
 session_start();
 
-class Database {
-    private $conn;
-    private $servername = "localhost:3307";
-    private $username = "root";
-    private $password = "";
-    private $dbname = "glam_db";  
+require_once '../Backend/conn.php';
 
-    public function connect() {
-        try {
-            $this->conn = new PDO("mysql:host=$this->servername;dbname=$this->dbname", $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            die("Connection failed: " . $e->getMessage());
-        }
-        return $this->conn;
-    }
-
-    public function close() {
-        $this->conn = null;
-    }
-}
-
-$database = new Database();
-$conn = $database->connect();
+$database = new dbConnect();
+$conn = $database->connectDB();
 
 $query = "SELECT * FROM products";
 $stmt = $conn->prepare($query);
@@ -108,6 +87,7 @@ $products = $stmt->fetchAll();
     }
     #products {
         padding: 20px;
+        text-align: center;
     }
 
     .product-list {
@@ -141,10 +121,10 @@ $products = $stmt->fetchAll();
 
     .product-item img {
         width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    clear: both;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        clear: both;
     }
 
     .product-item h3 {
@@ -253,11 +233,13 @@ $products = $stmt->fetchAll();
                     <p>Brand: <?php echo $product['brand']; ?></p>
 
                     <?php if ($product['image']): ?>
-            
-            <img src="<?php echo $product['image']; ?>" alt="Product Image" style="max-width: 100px; max-height: 100px;">
-        <?php else: ?>
-            <p>No image assigned</p>
-        <?php endif; ?>
+                        <img src="uploads/<?php echo htmlspecialchars($product['image']); ?>" alt="Product Image" style="max-width: 100px; max-height: 100px;">
+                    <?php else: ?>
+                        <p>No image assigned</p>
+                    <?php endif; ?>
+
+
+
 
         <a href="manage_products.php?edit_id=<?php echo $product['id']; ?>">Edit</a>
         <a href="manage_products.php?delete_id=<?php echo $product['id']; ?>" onclick="return confirm('Are you sure?');">Delete</a>

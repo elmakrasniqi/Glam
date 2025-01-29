@@ -1,30 +1,10 @@
 <?php
 session_start();
 
-class Database {
-    private $conn;
-    private $servername = "localhost:3307";
-    private $username = "root";
-    private $password = "";
-    private $dbname = "glam_db";  
+require_once '../Backend/conn.php';
 
-    public function connect() {
-        try {
-            $this->conn = new PDO("mysql:host=$this->servername;dbname=$this->dbname", $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            die("Connection failed: " . $e->getMessage());
-        }
-        return $this->conn;
-    }
-
-    public function close() {
-        $this->conn = null;
-    }
-}
 function uploadImage($file) {
-    $target_dir = "uploads/";
+    $target_dir = __DIR__ . "/uploads/";
 
     if(!is_dir($target_dir)){
         mkdir($target_dir, 0777, true);
@@ -32,6 +12,10 @@ function uploadImage($file) {
     if(!is_writeable($target_dir)){
         return "Sorry, the upload directory is not writable.";
     }
+    if ($file['error'] === UPLOAD_ERR_NO_FILE) {
+        return "No file was uploaded.";
+    }
+
     $target_file =  $target_dir . basename($file["name"]);
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $imagePath = $target_file;
@@ -48,22 +32,22 @@ function uploadImage($file) {
     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
         return "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
     }
-    if(move_uploaded_file($file["tmp_name"], $target_file)){
-       echo "File uploaded successfully! File path: $target_file";
+    if (move_uploaded_file($file["tmp_name"], $target_file)) {
+        echo "File uploaded successfully! File path: $target_file";
         return $target_file;
-    }else {
-        return"Sorry, there was an error uploading your file.";
+    } else {
+        echo "Sorry, there was an error uploading your file.";
+        var_dump($file);
+        return "Sorry, there was an error uploading your file.";
     }
-
 }
 
 function getAllProducts() {
-    $db = new Database();
-    $conn = $db->connect();
+    $database = new dbConnect();
+    $conn = $database->connectDB();
     $sql = "SELECT * FROM products";
     $stmt = $conn->query($sql);
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $db->close();
     return $products;
 }
 $products = getAllProducts();
@@ -140,6 +124,42 @@ if(isset($_GET['edit_id'])) {
 
 $products = getAllProducts();
 
+if (isset($_POST['update_product'])) {
+    $product_id = $_POST['product_id']; 
+    $name = $_POST['product_name'];
+    $price = $_POST['product_price'];
+    $brand = $_POST['product_brand'];
+
+    $image = null;
+    if (isset($_POST['image_option']) && $_POST['image_option'] == 'file' && isset($_FILES['product_image'])) {
+        $image = uploadImage($_FILES['product_image']);
+        if (strpos($image, "Sorry") !== false) {
+            echo "<script>alert('$image');</script>";
+            $image = null;
+        }
+    } elseif (isset($_POST['image_option']) && $_POST['image_option'] == 'url' && !empty($_POST['image_url'])) {
+        $image = $_POST['image_url']; 
+    }
+
+    if ($image !== null) {
+        $db = new Database();
+        $conn = $db->connect();
+        $sql = "UPDATE products SET name = :name, price = :price, brand = :brand, image = :image WHERE id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':price', $price);
+        $stmt->bindParam(':brand', $brand);
+        $stmt->bindParam(':image', $image);
+        $stmt->bindParam(':id', $product_id, PDO::PARAM_INT); 
+        $stmt->execute();
+        $db->close();
+
+        $products = getAllProducts();
+
+        header("Location: addproducts.php");
+        exit();
+    }
+}
 
 
 ?>
@@ -327,23 +347,31 @@ $products = getAllProducts();
             <label for="product_brand">Brand</label>
             <input type="text" id="product_brand" name="product_brand" required value="<?php echo isset($product) ? $product['brand'] : ''; ?>">
 
-            <label for="image_option">Image Upload Option:</label><br>
-    <input type="radio" id="image_option_url" name="image_option" value="url" <?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? 'checked' : ''; ?>> URL
-    <input type="radio" id="image_option_file" name="image_option" value="file" <?php echo isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL) ? 'checked' : ''; ?>> File<br><br>
+             <label for="image_option">Image Upload Option:</label><br>
+            <input type="radio" id="image_option_url" name="image_option" value="url" 
+                <?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? 'checked' : ''; ?>> URL
+            <input type="radio" id="image_option_file" name="image_option" value="file" 
+                <?php echo isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL) ? 'checked' : ''; ?>> File<br><br>
 
-    <div id="url_input" style="display: <?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? 'block' : 'none'; ?>;">
-        <label for="image_url">Product Image URL:</label><br>
-        <input type="text" id="image_url" name="image_url" placeholder="Enter image URL" value="<?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? $product['image'] : ''; ?>"><br><br>
-    </div>
+            <div id="url_input" style="display: <?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? 'block' : 'none'; ?>;">
+                <label for="image_url">Product Image URL:</label><br>
+                <input type="text" id="image_url" name="image_url" placeholder="Enter image URL" 
+                    value="<?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? $product['image'] : ''; ?>"><br><br>
+            </div>
 
-    <div id="file_input" style="display: <?php echo isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL) ? 'block' : 'none'; ?>;">
-        <label for="product_image">Product Image (File):</label><br>
-        <input type="file" id="product_image" name="product_image"><br><br>
-    </div>
+            <div id="file_input" style="display: <?php echo isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL) ? 'block' : 'none'; ?>;">
+                <label for="product_image">Product Image (File):</label><br>
+                <?php if (isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL)): ?>
+                <img src="<?php echo 'uploads/' . htmlspecialchars($product['image']); ?>" alt="Product Image" style="max-width: 200px; max-height: 200px;">
+<?php endif; ?>
 
-    <button type="submit" name="<?php echo isset($product) ? 'update_product' : 'add_product'; ?>">
-                <?php echo isset ($product)? 'Update Product' : 'Add Product'; ?>
-            </button>
+                <input type="file" id="product_image" name="product_image"><br><br>
+            </div>
+
+            <button type="submit" name="update_product">
+    <?php echo isset($product) ? 'Update Product' : 'Add Product'; ?>
+</button>
+
 </form>
     
 
