@@ -1,41 +1,11 @@
 <?php
 session_start();
 
-class Database {
-    private $conn;
-    private $servername = "localhost";
-    private $username = "root";
-    private $password = "";
-    private $dbname = "glam_db";  
+require_once '../Backend/conn.php';
 
-    public function connect() {
-        try {
-            $this->conn = new PDO("mysql:host=$this->servername;dbname=$this->dbname", $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            die("Connection failed: " . $e->getMessage());
-        }
-        return $this->conn;
-    }
+$database = new dbConnect();
+$conn = $database->connectDB();
 
-    public function close() {
-        $this->conn = null;
-    }
-}
-
-$database = new Database();
-$conn = $database->connect();
-
-if (isset($_GET['delete_id'])) {
-    $product_id = $_GET['delete_id'];
-    $query = "DELETE FROM products WHERE id = :id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':id', $product_id, PDO::PARAM_INT);
-    $stmt->execute();
-    header("Location: makeup.php");
-    exit;
-}
 $query = "SELECT * FROM products";
 $stmt = $conn->prepare($query);
 $stmt->execute();
@@ -117,23 +87,41 @@ $products = $stmt->fetchAll();
     }
     #products {
         padding: 20px;
+        text-align: center;
+        display: grid;
+        justify-items: center; 
+        gap: 20px;
+        max-width: 100%;
+        margin: 0 auto;
     }
 
     .product-list {
+        margin: 30px;
+        padding: 30px;
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        margin-top: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+        justify-items: center;
+        max-width: 100%;
     }
 
     .product-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
         background-color: #fff;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         text-align: center;
         transition: transform 0.3s ease;
-        border: 1px solid #ddd;
+        position: relative;
+        height: 400px;
+        width: 250px;
+        overflow: hidden;
+
     }
 
     .product-item:hover {
@@ -141,20 +129,31 @@ $products = $stmt->fetchAll();
     }
 
     .product-item img {
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 10px;
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 15px;
     }
 
     .product-item h3 {
         font-size: 1.2em;
-        margin: 10px 0;
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 10px;
+        flex-grow: 1;
+        line-height: 1.2;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .product-item .price {
-        font-size: 1.1em;
-        color: #b22222;
-        margin-bottom: 10px;
+        font-size: 15px;
+        color: rgb(38, 34, 34);
+        margin-bottom: 15px;
+        flex-shrink: 0;
     }
 
     .product-item button {
@@ -192,14 +191,23 @@ $products = $stmt->fetchAll();
             grid-template-colums:reapeat(3,1fr);
         }
         
+        
     }
     @media (max-width:768px) {
         .product-list {
             grid-template-columns: repeat(2,1fr);
+            overflow: hidden;
         }
         h2 {
-            font-size: 2em;
+            font-size: 1.5em;
         }
+        .product-item {
+            height: 300px;
+            width: 200px;
+            max-width: 90%;
+            
+
+    }
         .product-item h3 {
             font-size: 1em;
         }
@@ -241,33 +249,24 @@ $products = $stmt->fetchAll();
         <div class="product-list">
         <?php foreach ($products as $product): ?>
                 <div class="product-item">
-                    <span>
-                        <?php echo "{$product['name']} - \${$product['price']} - {$product['brand']}"; ?>
-                    </span>
-        
+                    <h3><?php echo $product['name']; ?></h3>
+                    <p>Price: $<?php echo $product['price']; ?></p>
+                    <p>Brand: <?php echo $product['brand']; ?></p>
+
                     <?php if ($product['image']): ?>
-            <?php
-                $imagePath = "uploads/{$product['image']}";
-                echo "<p>Image Path: {$imagePath}</p>"; 
-            ?>
-            <?php if (file_exists($imagePath)): ?>
-                <img src="<?php echo $imagePath; ?>" alt="Product Image" style="max-width: 100px; max-height: 100px;">
-            <?php else: ?>
-                <span>No image available</span>
-            <?php endif; ?>
-        <?php else: ?>
-            <span>No image assigned</span>
-        <?php endif; ?>
+                        <img src="uploads/<?php echo htmlspecialchars($product['image']); ?>" alt="Product Image" style="max-width: 100px; max-height: 100px;">
+                    <?php else: ?>
+                        <p>No image assigned</p>
+                    <?php endif; ?>
 
 
-        <div><a href="manage_products.php?edit_id=<?php echo $product['id']; ?>">Edit"></a></div>
+
+
+        <a href="manage_products.php?edit_id=<?php echo $product['id']; ?>">Edit</a>
         <a href="manage_products.php?delete_id=<?php echo $product['id']; ?>" onclick="return confirm('Are you sure?');">Delete</a>
-
                 
-             </div>
-        </div>
-        <?php endforeach; ?>
     </div>
+    <?php endforeach; ?>
     </section>
 
     <footer>
