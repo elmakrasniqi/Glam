@@ -10,25 +10,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userData = $admin->login($email, $password);
 
     if ($userData) {
-        // User login successful
         $_SESSION['user_id'] = $userData['id'];
         $_SESSION['role'] = $userData['role'];
 
         // Set cookies for persistent login
-        setcookie('user_email', $email, time() + (86400 * 30), "/"); // Valid for 30 days, accessible across the entire site
-        setcookie('user_id', $userData['id'], time() + (86400 * 30), "/"); // Valid for 30 days, accessible across the entire site
+        setcookie('user_email', $email, time() + (86400 * 30), "/");
+        setcookie('user_id', $userData['id'], time() + (86400 * 30), "/");
 
-        // Redirect to admin or user dashboard
+        // Redirect based on role
         if ($userData['role'] == 1) {
             header("Location: ../Admin/dashboard.php");
+            exit();
         } else {
             header("Location: ../User/homeindex.php");
+            exit();
         }
     } else {
-        echo "Invalid email or password.";
+        // Silent fail: Redirect back to login page with no error message
+        header("Location: Login.php");
+        exit();
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -52,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav>
         <input type="checkbox" id="checkbox">
         <label for="checkbox" class="checkbox"><i class="fas fa-bars"></i></label>
-        <label class="logo"><a href="index.html">Glam</a></label>
+        <label class="logo"><a href="index.php">Glam</a></label>
         <ul class="list">
             <li><a href="index.php">Home</a></li>
             <li><a href="MakeUp.php">Make up</a></li>
@@ -105,6 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     });
 </script>
-
 </body>
 </html>
+

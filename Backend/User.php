@@ -65,9 +65,14 @@ class User {
         }
         return false;
     }
+<<<<<<< HEAD
 
     // Read method: Fetch all users
     public function readAll() {
+=======
+       // Read method: Fetch all users
+       public function readAll() {
+>>>>>>> 86ee35ae81cc828fa5ac3f759a8066a5e589ebdd
         $sql = "SELECT * FROM " . $this->table;
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
@@ -121,5 +126,25 @@ class User {
         }
         return false;
     }
+<<<<<<< HEAD
 }
+=======
+    public function getUserByEmail($email) {
+        require '../Backend/Database.php'; // Ensure this points to your DB connection
+    
+        $db = new Database(); // Assuming you have a Database class handling the connection
+        $conn = $db->getConnection(); 
+    
+        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        return $result->fetch_assoc(); // Return user details as an associative array
+    }
+    
+}
+
+
+>>>>>>> 86ee35ae81cc828fa5ac3f759a8066a5e589ebdd
 ?>
