@@ -4,7 +4,8 @@ session_start();
 require_once '../Backend/conn.php';
 
 function uploadImage($file) {
-    $target_dir = __DIR__ . "/uploads/";
+    $target_dir = $_SERVER['DOCUMENT_ROOT'] . "/Glam/image/";
+
 
     if(!is_dir($target_dir)){
         mkdir($target_dir, 0777, true);
@@ -18,7 +19,7 @@ function uploadImage($file) {
 
     $target_file =  $target_dir . basename($file["name"]);
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-    $imagePath = $target_file;
+    $imagePath = "/Glam/image/" . basename($file["name"]);
 
     if(getimagesize($file["tmp_name"])==false) {
         return "File is not an image.";
@@ -43,8 +44,8 @@ function uploadImage($file) {
 }
 
 function getAllProducts() {
-    $database = new dbConnect();
-    $conn = $database->connectDB();
+    $db = new dbConnect();  
+    $conn = $db->connectDB(); 
     $sql = "SELECT * FROM products";
     $stmt = $conn->query($sql);
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -70,8 +71,8 @@ if(isset($_POST['add_product'])) {
 
         if($image !== null) {
 
-        $db = new Database();
-        $conn = $db->connect();
+        $db = new dbConnect(); 
+        $conn = $db->connectDB();
         $sql = "INSERT INTO products (name, price, brand, image) VALUES (:name, :price, :brand, :image)";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':name', $name);
@@ -80,7 +81,7 @@ if(isset($_POST['add_product'])) {
         $stmt->bindParam(':image', $image);
         $stmt->execute();
 
-        $db->close();
+        $conn = null;
     }
     }
     
@@ -91,13 +92,13 @@ if(isset($_POST['add_product'])) {
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
 
-    $db = new Database();
-    $conn = $db->connect();
+    $db = new dbConnect();  
+    $conn = $db->connectDB();
     $sql = "DELETE FROM products WHERE id = :id";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':id', $delete_id);
     $stmt->execute();
-    $db->close();
+    $conn = null;
     
     header("Location: manage_products.php");
     exit();
@@ -106,14 +107,14 @@ if (isset($_GET['delete_id'])) {
 if(isset($_GET['edit_id'])) {
     $edit_id = $_GET['edit_id'];
 
-    $db = new Database();
-    $conn = $db->connect();
+    $database = new dbConnect();
+    $conn = $database->connectDB();
     $sql = "SELECT * FROM products WHERE id = :id";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':id', $edit_id, PDO::PARAM_INT);
     $stmt->execute();
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
-    $db->close();
+    $conn = null;
 
     if(!$product) {
         echo "Product not found!";
@@ -142,8 +143,8 @@ if (isset($_POST['update_product'])) {
     }
 
     if ($image !== null) {
-        $db = new Database();
-        $conn = $db->connect();
+        $db = new dbConnect();  
+        $conn = $db->connectDB();
         $sql = "UPDATE products SET name = :name, price = :price, brand = :brand, image = :image WHERE id = :id";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':name', $name);
@@ -152,7 +153,7 @@ if (isset($_POST['update_product'])) {
         $stmt->bindParam(':image', $image);
         $stmt->bindParam(':id', $product_id, PDO::PARAM_INT); 
         $stmt->execute();
-        $db->close();
+        $conn = null;
 
         $products = getAllProducts();
 
@@ -362,8 +363,9 @@ if (isset($_POST['update_product'])) {
             <div id="file_input" style="display: <?php echo isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL) ? 'block' : 'none'; ?>;">
                 <label for="product_image">Product Image (File):</label><br>
                 <?php if (isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL)): ?>
-                <img src="<?php echo 'uploads/' . htmlspecialchars($product['image']); ?>" alt="Product Image" style="max-width: 200px; max-height: 200px;">
-<?php endif; ?>
+                <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="Product Image" style="max-width: 200px; max-height: 200px;">
+
+                <?php endif; ?>
 
                 <input type="file" id="product_image" name="product_image"><br><br>
             </div>

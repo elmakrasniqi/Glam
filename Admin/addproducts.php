@@ -88,6 +88,11 @@ $products = $stmt->fetchAll();
     #products {
         padding: 20px;
         text-align: center;
+        display: grid;
+        justify-items: center; 
+        gap: 20px;
+        max-width: 100%;
+        margin: 0 auto;
     }
 
     .product-list {
@@ -95,7 +100,7 @@ $products = $stmt->fetchAll();
         padding: 30px;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
+        gap: 15px;
         justify-items: center;
         max-width: 100%;
     }
@@ -108,11 +113,15 @@ $products = $stmt->fetchAll();
         background-color: #fff;
         border: 1px solid #ddd;
         border-radius: 20px;
-        padding: 50px;
+        padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         text-align: center;
         transition: transform 0.3s ease;
         position: relative;
+        height: 400px;
+        width: 250px;
+        overflow: hidden;
+
     }
 
     .product-item:hover {
@@ -121,27 +130,30 @@ $products = $stmt->fetchAll();
 
     .product-item img {
         width: 100%;
-        height: auto;
+        height: 150px;
+        object-fit: cover;
         border-radius: 8px;
-        margin-bottom: 10px;
-        clear: both;
+        margin-bottom: 15px;
     }
 
     .product-item h3 {
-    font-size: 1.2em;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 10px;
-    flex-shrink: 0;
-    line-height: 1.2;
-    display: inline-block;
+        font-size: 1.2em;
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 10px;
+        flex-grow: 1;
+        line-height: 1.2;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .product-item .price {
-    font-size: 15px;
-    color: rgb(38, 34, 34);
-    margin-bottom: 15px;
-    flex-shrink: 0;
+        font-size: 15px;
+        color: rgb(38, 34, 34);
+        margin-bottom: 15px;
+        flex-shrink: 0;
     }
 
     .product-item button {
@@ -179,14 +191,23 @@ $products = $stmt->fetchAll();
             grid-template-colums:reapeat(3,1fr);
         }
         
+        
     }
     @media (max-width:768px) {
         .product-list {
             grid-template-columns: repeat(2,1fr);
+            overflow: hidden;
         }
         h2 {
             font-size: 1.5em;
         }
+        .product-item {
+            height: 300px;
+            width: 200px;
+            max-width: 90%;
+            
+
+    }
         .product-item h3 {
             font-size: 1em;
         }
