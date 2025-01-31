@@ -2,169 +2,74 @@
 session_start();
 
 require_once '../Backend/conn.php';
+require_once '../Backend/products.php';
 
-function uploadImage($file) {
-    $target_dir = $_SERVER['DOCUMENT_ROOT'] . "/Glam/image/";
+$database = new dbConnect();
+$conn = $database->connectDB();
 
+// Handle form submissions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['add_product'])) {
+        // Add a new product
+        $name = $_POST['product_name'];
+        $price = $_POST['product_price'];
+        $brand = $_POST['product_brand'];
+        $image = $_FILES['product_image']['name'];
 
-    if(!is_dir($target_dir)){
-        mkdir($target_dir, 0777, true);
-    }
-    if(!is_writeable($target_dir)){
-        return "Sorry, the upload directory is not writable.";
-    }
-    if ($file['error'] === UPLOAD_ERR_NO_FILE) {
-        return "No file was uploaded.";
-    }
+        // Upload image
+        $target_dir = "../image/";
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+        $target_file = $target_dir . basename($_FILES['product_image']['name']);
+        move_uploaded_file($_FILES['product_image']['tmp_name'], $target_file);
 
-    $target_file =  $target_dir . basename($file["name"]);
-    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-    $imagePath = "/Glam/image/" . basename($file["name"]);
+        // Create product
+        Product::createProduct($conn, $name, $price, "../image/" . $image, $brand);
+        header("Location: manage_products.php");
+        exit();
+    } elseif (isset($_POST['update_product'])) {
+        // Update an existing product
+        $id = $_POST['product_id'];
+        $name = $_POST['product_name'];
+        $price = $_POST['product_price'];
+        $brand = $_POST['product_brand'];
 
-    if(getimagesize($file["tmp_name"])==false) {
-        return "File is not an image.";
-    }
-    if(file_exists($target_file)){
-        return "Sorry, file already exists.";
-    }
-    if($file["size"]>5000000) {
-        return "Sorry, your file is too large.";
-    }
-    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
-        return "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-    }
-    if (move_uploaded_file($file["tmp_name"], $target_file)) {
-        echo "File uploaded successfully! File path: $target_file";
-        return $target_file;
-    } else {
-        echo "Sorry, there was an error uploading your file.";
-        var_dump($file);
-        return "Sorry, there was an error uploading your file.";
-    }
-}
-
-function getAllProducts() {
-    $db = new dbConnect();  
-    $conn = $db->connectDB(); 
-    $sql = "SELECT * FROM products";
-    $stmt = $conn->query($sql);
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $products;
-}
-$products = getAllProducts();
-
-if(isset($_POST['add_product'])) {
-    $name = $_POST['product_name'];
-    $price = $_POST['product_price'];
-    $brand = $_POST['product_brand'];
-
-    $image = null;
-    if(isset($_POST['image_option']) && $_POST['image_option'] == 'file' && isset($_FILES['product_image'])) {
-        $image = uploadImage($_FILES['product_image']);
-        if(strpos($image, "Sorry") !== false) {
-            echo "<script>alert('$image');</script>";
-            $image = null;
-        } elseif(isset($_POST['image_option']) && $_POST['image_option'] == 'url' && !empty($_POST['image_url'])) {
-         $image = $_POST['image_url'];
-    
+        // Handle image update
+        if ($_FILES['product_image']['name']) {
+            $image = $_FILES['product_image']['name'];
+            $target_dir = "../image/";
+            $target_file = $target_dir . basename($_FILES['product_image']['name']);
+            move_uploaded_file($_FILES['product_image']['tmp_name'], $target_file);
+        } else {
+            $image = $_POST['existing_image'];
         }
 
-        if($image !== null) {
-
-        $db = new dbConnect(); 
-        $conn = $db->connectDB();
-        $sql = "INSERT INTO products (name, price, brand, image) VALUES (:name, :price, :brand, :image)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':price', $price);
-        $stmt->bindParam(':brand', $brand);
-        $stmt->bindParam(':image', $image);
-        $stmt->execute();
-
-        $conn = null;
-    }
-    }
-    
-   
-    $products = getAllProducts();
-}
-
-if (isset($_GET['delete_id'])) {
-    $delete_id = $_GET['delete_id'];
-
-    $db = new dbConnect();  
-    $conn = $db->connectDB();
-    $sql = "DELETE FROM products WHERE id = :id";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':id', $delete_id);
-    $stmt->execute();
-    $conn = null;
-    
-    header("Location: manage_products.php");
-    exit();
-}
-
-if(isset($_GET['edit_id'])) {
-    $edit_id = $_GET['edit_id'];
-
-    $database = new dbConnect();
-    $conn = $database->connectDB();
-    $sql = "SELECT * FROM products WHERE id = :id";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':id', $edit_id, PDO::PARAM_INT);
-    $stmt->execute();
-    $product = $stmt->fetch(PDO::FETCH_ASSOC);
-    $conn = null;
-
-    if(!$product) {
-        echo "Product not found!";
-        exit;
-    }
-    
-}
-
-$products = getAllProducts();
-
-if (isset($_POST['update_product'])) {
-    $product_id = $_POST['product_id']; 
-    $name = $_POST['product_name'];
-    $price = $_POST['product_price'];
-    $brand = $_POST['product_brand'];
-
-    $image = null;
-    if (isset($_POST['image_option']) && $_POST['image_option'] == 'file' && isset($_FILES['product_image'])) {
-        $image = uploadImage($_FILES['product_image']);
-        if (strpos($image, "Sorry") !== false) {
-            echo "<script>alert('$image');</script>";
-            $image = null;
-        }
-    } elseif (isset($_POST['image_option']) && $_POST['image_option'] == 'url' && !empty($_POST['image_url'])) {
-        $image = $_POST['image_url']; 
-    }
-
-    if ($image !== null) {
-        $db = new dbConnect();  
-        $conn = $db->connectDB();
-        $sql = "UPDATE products SET name = :name, price = :price, brand = :brand, image = :image WHERE id = :id";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':price', $price);
-        $stmt->bindParam(':brand', $brand);
-        $stmt->bindParam(':image', $image);
-        $stmt->bindParam(':id', $product_id, PDO::PARAM_INT); 
-        $stmt->execute();
-        $conn = null;
-
-        $products = getAllProducts();
-
-        header("Location: addproducts.php");
+        // Update product
+        Product::updateProduct($conn, $id, $name, $price, "../image/" . $image, $brand);
+        header("Location: manage_products.php");
         exit();
     }
 }
 
+// Handle delete request
+if (isset($_GET['delete_id'])) {
+    $id = $_GET['delete_id'];
+    Product::deleteProduct($conn, $id);
+    header("Location: manage_products.php");
+    exit();
+}
 
+// Fetch all products
+$products = Product::getAllProducts($conn);
+
+// Fetch product for editing
+$edit_product = null;
+if (isset($_GET['edit_id'])) {
+    $edit_id = $_GET['edit_id'];
+    $edit_product = Product::getProductById($conn, $edit_id);
+}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -174,228 +79,246 @@ if (isset($_POST['update_product'])) {
     <title>Manage Products</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background-color: rgb(165, 130, 150);
-            margin: 0;
-            padding: 0;
-            padding-top: 40px;
-        }
-        .admin-dashboard {
-            top:10px;
-            padding: 40px;
-            max-width: 600px;
-            margin: auto;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+    body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
 
-        h2 {
-            margin-top:18px;
-            color: #333;
-            font-size: 30px;
-            text-align: center;
-        }
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-        h3 {
-            font-size: 24px;
-            color: #333;
-            margin-top: 40px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-        }
-        .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 50%;
-            padding: 10px;
-            font-size: 18px;
-            color: #333;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+.back-button:hover {
+    background-color: rgb(128, 97, 114);
+    color: white;
+}
 
-        .back-button:hover {
-            background-color: rgb(128, 97, 114);
-            color: white;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
+.admin-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 
-        label {
-            font-size: 16px;
-            color: #555;
-        }
-        input[type="radio"] {
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 10px; 
-        margin-bottom:-21px;
-        }
+h2 {
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-        input[type="text"], input[type="number"], input[type="file"], select {
-            padding: 12px;
-            font-size: 16px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            outline: none;
-            width: 100%;
-            box-sizing: border-box;
-        }
+h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
 
-        input[type="text"]:focus, input[type="number"]:focus, input[type="file"]:focus, select:focus {
-            border-color: rgb(128, 97, 114);;
-        }
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
 
-        button {
-            padding: 12px 20px;
-            font-size: 16px;
-            background-color: rgb(68, 46, 57);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%;
-            box-sizing: border-box;
-        }
+.form-group {
+    margin-bottom: 15px;
+}
 
-        button:hover {
-            background-color: rgb(122, 101, 113);
-        }
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
 
-        .product-list {
-            margin-top: 30px;
-        }
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    box-sizing: border-box;
+}
 
-        .footer {
-            background-color: rgb(165, 130, 150);
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 30px;
-        }
+.form-group input:focus {
+    border-color: rgb(128, 97, 114);
+}
 
-        .footer p {
-            color: white;
-        }
+button {
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: rgb(128, 97, 114);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-        @media screen and (max-width: 768px) {
-            .admin_dashboard {
-                padding: 20px;
+button:hover {
+    background-color: rgb(100, 75, 90);
+}
 
+/* Product List Styles */
+.product-list {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
 
-            }
-            form{
-                margin-bottom: 20px;
-                padding: 20px;
-            }
-            
-            button {
-                width: auto;
-                margin-top: 20px;
-            }
-            .back-button {
-                border-radius: 50%;
-                padding: 8px;
-                font-size: 15px;
-                top: 3px;
-                 left: 10px;
-            }
-        }
-        @media screen and (max-width: 480px) {
-            h2{
-                font-size: 26px;
-            }
-            h3 {
-                font-size: 20px;
-            }
-            input[type="text"], input[type="number"], input[type="file"], select, button {
-                font-size: 14px;
-                padding: 10px;
-            }
-        }
+.product-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: calc(33.33% - 20px); /* Ensure 3 items per row, with some space between */
+    box-sizing: border-box;
+    text-align: center;
+}
 
-    </style>
+.product-item h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.product-item p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.product-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions a {
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.actions a:first-child {
+    background-color: rgb(128, 97, 114);
+    color: white;
+}
+
+.actions a:first-child:hover {
+    background-color: rgb(100, 75, 90);
+}
+
+.actions a:last-child {
+    background-color: rgb(193, 107, 104);
+    color: white;
+}
+
+.actions a:last-child:hover {
+    background-color: rgb(186, 91, 88);
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1024px) {
+    .product-item {
+        width: calc(50% - 20px); /* 2 items per row for larger tablets */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .product-item {
+        width: 100%; /* 1 item per row for mobile screens */
+    }
+}
+
+</style>
 </head>
 <body>
     <div class="admin-dashboard">
-        <h2>Manage Products - Admin Dashboard</h2>
-
-        <a href="addproducts.php" class="back-button">
+    <?php if(!isset($_GET['action']) || $_GET['action'] !== 'view'): ?>
+    <a href="dashboard.php" class="back-button">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h3><?php echo isset($product) ? "Edit Product" : "Add Product"; ?></h3>
+    <?php endif; ?>
+        <h2>Manage Products</h2>
 
+        <!-- Add/Edit Product Form -->
         <form method="POST" action="manage_products.php" enctype="multipart/form-data">
-            <?php if(isset($product)): ?>
-                <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-            <?php endif; ?>
-            
-            <label for="product_name">Product Name</label>
-            <input type="text" id="product_name" name="product_name" required value="<?php echo isset($product) ? $product['name'] : ''; ?>">
+    <?php if ($edit_product): ?>
+        <input type="hidden" name="product_id" value="<?php echo $edit_product->getId(); ?>">
+        <input type="hidden" name="existing_image" value="<?php echo $edit_product->getImage(); ?>">
+    <?php endif; ?>
 
-            <label for="product_price">Price</label>
-            <input type="number" id="product_price" name="product_price" required value="<?php echo isset($product) ? $product['price'] : ''; ?>">
-
-            <label for="product_brand">Brand</label>
-            <input type="text" id="product_brand" name="product_brand" required value="<?php echo isset($product) ? $product['brand'] : ''; ?>">
-
-             <label for="image_option">Image Upload Option:</label><br>
-            <input type="radio" id="image_option_url" name="image_option" value="url" 
-                <?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? 'checked' : ''; ?>> URL
-            <input type="radio" id="image_option_file" name="image_option" value="file" 
-                <?php echo isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL) ? 'checked' : ''; ?>> File<br><br>
-
-            <div id="url_input" style="display: <?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? 'block' : 'none'; ?>;">
-                <label for="image_url">Product Image URL:</label><br>
-                <input type="text" id="image_url" name="image_url" placeholder="Enter image URL" 
-                    value="<?php echo isset($product) && filter_var($product['image'], FILTER_VALIDATE_URL) ? $product['image'] : ''; ?>"><br><br>
-            </div>
-
-            <div id="file_input" style="display: <?php echo isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL) ? 'block' : 'none'; ?>;">
-                <label for="product_image">Product Image (File):</label><br>
-                <?php if (isset($product) && !filter_var($product['image'], FILTER_VALIDATE_URL)): ?>
-                <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="Product Image" style="max-width: 200px; max-height: 200px;">
-
-                <?php endif; ?>
-
-                <input type="file" id="product_image" name="product_image"><br><br>
-            </div>
-
-            <button type="submit" name="update_product">
-    <?php echo isset($product) ? 'Update Product' : 'Add Product'; ?>
-</button>
-
-</form>
-    
-
-        </div>
+    <div class="form-group">
+        <label for="product_name">Product Name:</label>
+        <input type="text" id="product_name" name="product_name" value="<?php echo $edit_product ? $edit_product->getName() : ''; ?>" required>
     </div>
 
-    <footer class="footer">
-        <p>Copyright © 2024 Glam. All rights reserved!</p>
-    </footer>
+    <div class="form-group">
+        <label for="product_price">Price:</label>
+        <input type="number" id="product_price" name="product_price" step="0.01" value="<?php echo $edit_product ? $edit_product->getPrice() : ''; ?>" required>
+    </div>
 
-    <script>
-        document.querySelectorAll('input[name="image_option"]').forEach((radio) => {
-    radio.addEventListener('change', function() {
-        if (document.getElementById('image_option_url').checked) {
-            document.getElementById('url_input').style.display = 'block';
-            document.getElementById('file_input').style.display = 'none';
-        } else {
-            document.getElementById('url_input').style.display = 'none';
-            document.getElementById('file_input').style.display = 'block';
-        }
-    });
-});
-    </script>
+    <div class="form-group">
+        <label for="product_brand">Brand:</label>
+        <input type="text" id="product_brand" name="product_brand" value="<?php echo $edit_product ? $edit_product->getBrand() : ''; ?>" required>
+    </div>
+
+    <div class="form-group">
+        <label for="product_image">Product Image:</label>
+        <input type="file" id="product_image" name="product_image">
+    </div>
+
+    <?php if ($edit_product): ?>
+        <button type="submit" name="update_product">Update Product</button>
+    <?php else: ?>
+        <button type="submit" name="add_product">Add Product</button>
+    <?php endif; ?>
+</form>
+
+        <!-- Product List -->
+        <div class="product-list">
+            <?php foreach ($products as $product): ?>
+                <div class="product-item">
+                    <h3><?php echo htmlspecialchars($product->getName()); ?></h3>
+                    <p>Price: <?php echo number_format($product->getPrice(), 2); ?>€</p>
+                    <p>Brand: <?php echo htmlspecialchars($product->getBrand()); ?></p>
+                    <img src="<?php echo htmlspecialchars($product->getImage()); ?>" alt="<?php echo htmlspecialchars($product->getName()); ?>">
+                    <div class="actions">
+                        <a href="manage_products.php?edit_id=<?php echo $product->getId(); ?>">Edit</a>
+                        <a href="manage_products.php?delete_id=<?php echo $product->getId(); ?>" onclick="return confirm('Are you sure?');">Delete</a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 </body>
 </html>
