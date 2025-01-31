@@ -61,7 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <li><a href="index.php">Home</a></li>
             <li><a href="MakeUp.php">Make up</a></li>
             <li><a href="AboutUs.php">About Us</a></li>
-            <li><a class="active" href="Login.php">Login</a></li>
+            <li><a href="ContactUs.php">Contact Us</a></li>
+            <li><a href="SignUp.php">SignUp</a></li>
         </ul>
     </nav>
   
@@ -109,6 +110,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     });
 </script>
+<footer class="footer">
+        <div class="container">
+          <div class="map">
+            <img src="../img/map.png" alt="map" >
+          </div>
+          <div class="row">
+                <div class="footer-col">
+                   <h4>Adress</h4>
+                  <ul>
+                      <li><a href="#">At Bulevardi Bill Clinton <br>
+                        Prishtinë, Kosovë<br>
+                       +383 49 241 241 <br></a>
+                       </li>
+                      <li><a href="#">glamglow@gmail.com</a></li>
+                  </ul>
+                </div>
+                <div class="footer-col">  
+                  <h4>Help</h4>
+                  <ul>
+                      <li><a href="#">Returns</a></li>
+                      <li><a href="../Main/AboutUs.php">About us</a></li>
+                      <li><a href="#">Shipping</a></li>
+                  </ul>
+                </div>
+                <div class="footer-col">
+                   <h4>Follow us</h4>
+                 <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-x"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyrights">
+          <p style="color: rgb(119, 119, 119);">Copyright © 2024 Glam.All rights reserved!</p>
+        </div>
+    </div>
+    </footer>
 </body>
 </html>
 
