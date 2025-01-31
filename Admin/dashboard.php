@@ -1,6 +1,12 @@
 <?php
 require_once '../Backend/conn.php';
 
+  //Check if user is an admin
+/*if ($_SESSION['role'] != 'admin') {
+    header("Location: ../Main/Login.php");
+    exit();
+}*/
+
 class MessageCRUD {
     private $conn;
 

@@ -2,11 +2,86 @@
 session_start();
 require_once '../Backend/conn.php';
 
+$database = new dbConnect();
+$conn = $database->connectDB();
+
+$userCRUD = new UserCRUD($conn);
+
+$modified_by = isset($_SESSION['user_id'])? $_SESSION['user_id']: null;
+
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if(isset($_POST['update_user'])) {
+        
+        $id = $_POST['user_id'];
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $email = $_POST['email'];
+        $role = $_POST['role'];
+
+        $userCRUD->updateUser($id, $first_name, $last_name, $email, $role, $modified_by);
+
+        header("Location: manage_users.php");
+        exit();
+    } elseif (isset($_POST['add_user'])) {
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $email = $_POST['email'];
+        $role = $_POST['role'];
+
+        $userCRUD->addUser($first_name, $last_name, $email, $role, $modified_by);
+        header("Location: manage_users.php");
+        exit();
+    }
+}
+        // Fetch all users
+        $users = $userCRUD->getAllUsers();
+        $userCount = $userCRUD->getUserCount();
+
+        // Fetch user for editing
+        $edit_user = null;
+        if (isset($_GET['edit_id'])) {
+            $edit_id = $_GET['edit_id'];
+            $edit_user = $userCRUD->getUserById($edit_id);
+        }
+
 class UserCRUD {
     private $conn;
 
     public function __construct($conn) {
         $this->conn = $conn;
+    }
+
+    public function getAdminNameById($admin_id) {
+        $sql = "SELECT first_name, last_name FROM users WHERE id = :admin_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':admin_id', $admin_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt = $stmt->fetch();
+        if($result) {
+            return $result['first_name'] . ' ' . $result['last_name'];
+        }
+        return null;
+    }
+
+    public function updateUser($id, $first_name, $last_name, $email, $role, $modified_by) {
+        $sql = "UPDATE users SET
+                first_name = :first_name,
+                last_name = :last_name,
+                email = :email,
+                role = :role,
+                modified_by = :modified_by, 
+                modified_at = NOW() 
+                WHERE id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':first_name', $first_name);
+        $stmt->bindParam(':last_name', $last_name);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':role', $role);
+        $stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_INT);
+
+        return $stmt->execute();
     }
 
     public function getUserById($id) {
@@ -43,25 +118,12 @@ class UserCRUD {
         $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':role', $role);
+        $stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
-    public function updateUser($id, $first_name, $last_name, $email, $role) {
-        $sql = "UPDATE users SET first_name = :first_name, last_name = :last_name, email = :email, role = :role WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':first_name', $first_name);
-        $stmt->bindParam(':last_name', $last_name);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':role', $role);
-        return $stmt->execute();
-    }
 }
 
-$database = new dbConnect();
-$conn = $database->connectDB();
-
-$userCRUD = new UserCRUD($conn);
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -229,6 +291,7 @@ if (isset($_GET['edit_id'])) {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
+            border-radius: 6px;
         }
 
         table th,
@@ -304,6 +367,7 @@ if (isset($_GET['edit_id'])) {
             .btn-delete {
                 width: 100%;
                 text-align: center;
+                padding: 5px;
             }
         }
     </style>
@@ -362,6 +426,8 @@ if (isset($_GET['edit_id'])) {
                         <th>Email</th>
                         <th>Role</th>
                         <th>Actions</th>
+                        <th>Modified By</th>
+                        <th>Modified At</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -374,6 +440,17 @@ if (isset($_GET['edit_id'])) {
                                 <a href="?edit_id=<?php echo $user['id']; ?>" class="btn btn-edit">Edit</a>
                                 <a href="?delete_id=<?php echo $user['id']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                             </td>
+                            <td>
+                                <?php
+                                if($user['modified_by']) {
+                                    $adminName = $userCRUD->getAdminNameById($user['modified_by']);
+                                    echo $adminName . "Modified";
+                                } else {
+                                    echo "Added";
+                                }
+                                ?>
+                         </td>
+                         <td><?php echo $user ['modified_at']; ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

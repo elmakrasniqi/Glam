@@ -7,6 +7,9 @@ require_once '../Backend/products.php';
 $database = new dbConnect();
 $conn = $database->connectDB();
 
+
+$modified_by = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_product'])) {
@@ -23,6 +26,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $target_file = $target_dir . basename($_FILES['product_image']['name']);
         move_uploaded_file($_FILES['product_image']['tmp_name'], $target_file);
+        
+        $image_path = "../image/" . $image;
+        $stmt->bindParam(':image', $image_path);
+
+
+        // Create product with modified_by parameter--admin who added the product
+        // Prepare the insert statement
+        $sql = "INSERT INTO products (name, price, image, brand, modified_by, modified_at) 
+        VALUES (:name, :price, :image, :brand, :modified_by, NOW())";
+
+        $stmt = $conn->prepare($sql);
+
+        // Bind the parameters
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':price', $price);
+        $stmt->bindParam(':image', $image_path);
+        $stmt->bindParam(':brand', $brand);
+        $stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_INT);
+
+        // Execute the query
+        $stmt->execute();
+
 
         // Create product
         Product::createProduct($conn, $name, $price, "../image/" . $image, $brand);
@@ -44,6 +69,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $image = $_POST['existing_image'];
         }
+
+        
+        // Update product with modified_by parameter (admin who updated the product)
+        $sql = "UPDATE products SET 
+        name = :name,
+        price = :price,
+        image = :image,
+        brand = :brand,
+        modified_by = :modified_by,
+        modified_at = NOW() 
+        WHERE id = :id";
+
+        $stmt = $conn->prepare($sql);
+
+        // Bind the parameters
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':price', $price);
+        $stmt->bindParam(':image', $image_path);
+        $stmt->bindParam(':brand', $brand);
+        $stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_INT);
+
+        // Execute the query
+        $stmt->execute();
+
 
         // Update product
         Product::updateProduct($conn, $id, $name, $price, "../image/" . $image, $brand);
@@ -69,6 +119,8 @@ if (isset($_GET['edit_id'])) {
     $edit_id = $_GET['edit_id'];
     $edit_product = Product::getProductById($conn, $edit_id);
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -218,6 +270,7 @@ button:hover {
 .actions {
     display: flex;
     gap: 10px;
+    text-align: center;
 }
 
 .actions a {
@@ -226,9 +279,12 @@ button:hover {
     border-radius: 4px;
     text-decoration: none;
     transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-right: 10px;
 }
 
 .actions a:first-child {
+    margin-right: 0;
     background-color: rgb(128, 97, 114);
     color: white;
 }
@@ -255,7 +311,10 @@ button:hover {
 
 @media screen and (max-width: 768px) {
     .product-item {
-        width: 100%; /* 1 item per row for mobile screens */
+        width: calc(50% - 20px); /* 1 item per row for mobile screens */
+    }
+    .actions {
+        flex-wrap: nowrap;
     }
 }
 
