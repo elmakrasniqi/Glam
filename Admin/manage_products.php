@@ -79,149 +79,230 @@ if (isset($_GET['edit_id'])) {
     <title>Manage Products</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(165, 130, 150);
-            margin: 0;
-            padding: 0;
-            padding-top: 40px;
-        }
-        .admin-dashboard {
-            max-width: 800px;
-            margin: auto;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+    body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
 
-        h2 {
-            margin-top:18px;
-            color: #333;
-            font-size: 30px;
-            text-align: center;
-        }
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-        h3 {
-            font-size: 24px;
-            color: #333;
-            margin-top: 40px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-        }
-        .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 50%;
-            padding: 10px;
-            font-size: 18px;
-            color: #333;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+.back-button:hover {
+    background-color: rgb(128, 97, 114);
+    color: white;
+}
 
-        .back-button:hover {
-            background-color: rgb(128, 97, 114);
-            color: white;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        label {
-            font-size: 16px;
-            color: #555;
-        }
-        input[type="text"], input[type="number"], input[type="file"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            outline: none;
-            width: 100%;
-            box-sizing: border-box;
-        }
+.admin-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 
-        input[type="text"]:focus, input[type="number"]:focus, input[type="file"]:focus, select:focus {
-            border-color: rgb(128, 97, 114);;
-        }
+h2 {
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: rgb(68, 46, 57);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%;
-            box-sizing: border-box;
-        }
+h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
 
-        button:hover {
-            background-color: rgb(122, 101, 113);
-        }
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
 
-        .product-list {
-            margin-top: 20px;
-        }
-        .product-item {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        }
-        @media screen and (max-width: 480px) {
-            h2{
-                font-size: 26px;
-            }
-        .actions a {
-            text-decoration: none;
-            color: #333;
-        }
-        .actions a:hover {
-            color: rgb(68, 46, 57);
-        }
-    </style>
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    border-color: rgb(128, 97, 114);
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: rgb(128, 97, 114);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: rgb(100, 75, 90);
+}
+
+/* Product List Styles */
+.product-list {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.product-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: calc(33.33% - 20px); /* Ensure 3 items per row, with some space between */
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.product-item h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.product-item p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.product-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions a {
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.actions a:first-child {
+    background-color: rgb(128, 97, 114);
+    color: white;
+}
+
+.actions a:first-child:hover {
+    background-color: rgb(100, 75, 90);
+}
+
+.actions a:last-child {
+    background-color: rgb(193, 107, 104);
+    color: white;
+}
+
+.actions a:last-child:hover {
+    background-color: rgb(186, 91, 88);
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1024px) {
+    .product-item {
+        width: calc(50% - 20px); /* 2 items per row for larger tablets */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .product-item {
+        width: 100%; /* 1 item per row for mobile screens */
+    }
+}
+
+</style>
 </head>
 <body>
     <div class="admin-dashboard">
-    <a href="dashboard.php">Back to Dashboard</a>
+    <?php if(!isset($_GET['action']) || $_GET['action'] !== 'view'): ?>
+    <a href="dashboard.php" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    <?php endif; ?>
         <h2>Manage Products</h2>
 
         <!-- Add/Edit Product Form -->
         <form method="POST" action="manage_products.php" enctype="multipart/form-data">
-            <?php if ($edit_product): ?>
-                <input type="hidden" name="product_id" value="<?php echo $edit_product->getId(); ?>">
-                <input type="hidden" name="existing_image" value="<?php echo $edit_product->getImage(); ?>">
-            <?php endif; ?>
+    <?php if ($edit_product): ?>
+        <input type="hidden" name="product_id" value="<?php echo $edit_product->getId(); ?>">
+        <input type="hidden" name="existing_image" value="<?php echo $edit_product->getImage(); ?>">
+    <?php endif; ?>
 
-            <label for="product_name">Product Name:</label>
-            <input type="text" id="product_name" name="product_name" value="<?php echo $edit_product ? $edit_product->getName() : ''; ?>" required>
+    <div class="form-group">
+        <label for="product_name">Product Name:</label>
+        <input type="text" id="product_name" name="product_name" value="<?php echo $edit_product ? $edit_product->getName() : ''; ?>" required>
+    </div>
 
-            <label for="product_price">Price:</label>
-            <input type="number" id="product_price" name="product_price" step="0.01" value="<?php echo $edit_product ? $edit_product->getPrice() : ''; ?>" required>
+    <div class="form-group">
+        <label for="product_price">Price:</label>
+        <input type="number" id="product_price" name="product_price" step="0.01" value="<?php echo $edit_product ? $edit_product->getPrice() : ''; ?>" required>
+    </div>
 
-            <label for="product_brand">Brand:</label>
-            <input type="text" id="product_brand" name="product_brand" value="<?php echo $edit_product ? $edit_product->getBrand() : ''; ?>" required>
+    <div class="form-group">
+        <label for="product_brand">Brand:</label>
+        <input type="text" id="product_brand" name="product_brand" value="<?php echo $edit_product ? $edit_product->getBrand() : ''; ?>" required>
+    </div>
 
-            <label for="product_image">Product Image:</label>
-            <input type="file" id="product_image" name="product_image">
+    <div class="form-group">
+        <label for="product_image">Product Image:</label>
+        <input type="file" id="product_image" name="product_image">
+    </div>
 
-            <?php if ($edit_product): ?>
-                <button type="submit" name="update_product">Update Product</button>
-            <?php else: ?>
-                <button type="submit" name="add_product">Add Product</button>
-            <?php endif; ?>
-        </form>
+    <?php if ($edit_product): ?>
+        <button type="submit" name="update_product">Update Product</button>
+    <?php else: ?>
+        <button type="submit" name="add_product">Add Product</button>
+    <?php endif; ?>
+</form>
 
         <!-- Product List -->
         <div class="product-list">
