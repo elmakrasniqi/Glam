@@ -121,17 +121,12 @@ class User {
         return false;
     }
     public function getUserByEmail($email) {
-        require '../Backend/Database.php'; // Ensure this points to your DB connection
-    
-        $db = new Database(); // Assuming you have a Database class handling the connection
-        $conn = $db->getConnection(); 
-    
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
+        $sql = "SELECT * FROM users WHERE email = :email";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":email", $email);
         $stmt->execute();
         
-        $result = $stmt->get_result();
-        return $result->fetch_assoc(); // Return user details as an associative array
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
 }
