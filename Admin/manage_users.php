@@ -276,7 +276,6 @@ if (isset($_GET['action'])) {
             <p><strong>Name:</strong> <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']); ?></p>
             <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
             <p><strong>Role:</strong> <?php echo htmlspecialchars($user['role']); ?></p>
-            <p><strong>Last Login:</strong> <?php echo $user['last_login'] ? htmlspecialchars($user['last_login']) : 'Not available'; ?></p>
             <a href="manage_users.php">Back to Users</a>
         </div>
     <?php else: ?>

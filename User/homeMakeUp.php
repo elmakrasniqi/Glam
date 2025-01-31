@@ -40,7 +40,6 @@ $products = Product::getAllProducts($pdo);
                 <li><a  href="./homeindex.php">Home</a></li>
                 <li><a class="active" href="./homeMakeUp.php">Make up</a></li>
                 <li><a href="homeAboutUs.php">About Us</a></li>
-                <li><a href="ContactUs.php">Contact Us</a></li>
                 <li><a href="LogOut.php">LogOut</a></li>
            </ul>
         </nav>
