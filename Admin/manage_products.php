@@ -8,7 +8,22 @@ $database = new dbConnect();
 $conn = $database->connectDB();
 
 
-$modified_by = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+function logAdminAction($action, $product_id,) {
+    global $conn;
+    
+    // SQL query to insert into admin_actions table
+    $sql = "INSERT INTO admin_actions (product_id, action, action_time) 
+            VALUES (:product_id, :action, NOW())";
+    
+    // Prepare and bind the SQL query
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+    $stmt->bindParam(':action', $action);
+    
+    // Execute the query
+    $stmt->execute();
+}
+
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -28,13 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         move_uploaded_file($_FILES['product_image']['tmp_name'], $target_file);
         
         $image_path = "../image/" . $image;
-        $stmt->bindParam(':image', $image_path);
 
 
-        // Create product with modified_by parameter--admin who added the product
         // Prepare the insert statement
-        $sql = "INSERT INTO products (name, price, image, brand, modified_by, modified_at) 
-        VALUES (:name, :price, :image, :brand, :modified_by, NOW())";
+        $sql = "INSERT INTO products (name, price, image, brand, modified_at) 
+        VALUES (:name, :price, :image, :brand,  NOW())";
 
         $stmt = $conn->prepare($sql);
 
@@ -43,11 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':price', $price);
         $stmt->bindParam(':image', $image_path);
         $stmt->bindParam(':brand', $brand);
-        $stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_INT);
 
         // Execute the query
         $stmt->execute();
 
+        logAdminAction('insert', $conn->lastInsertId());
 
         // Create product
         Product::createProduct($conn, $name, $price, "../image/" . $image, $brand);
@@ -71,13 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         
-        // Update product with modified_by parameter (admin who updated the product)
+        // Update product with modified parameter 
         $sql = "UPDATE products SET 
         name = :name,
         price = :price,
         image = :image,
         brand = :brand,
-        modified_by = :modified_by,
         modified_at = NOW() 
         WHERE id = :id";
 
@@ -89,11 +101,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':price', $price);
         $stmt->bindParam(':image', $image_path);
         $stmt->bindParam(':brand', $brand);
-        $stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_INT);
 
         // Execute the query
         $stmt->execute();
 
+        logAdminAction('update', $id,);
 
         // Update product
         Product::updateProduct($conn, $id, $name, $price, "../image/" . $image, $brand);
@@ -102,23 +114,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Handle delete request
-if (isset($_GET['delete_id'])) {
-    $id = $_GET['delete_id'];
-    Product::deleteProduct($conn, $id);
-    header("Location: manage_products.php");
-    exit();
-}
+        // Handle delete request
+        if (isset($_GET['delete_id'])) {
+            $id = $_GET['delete_id'];
+            Product::deleteProduct($conn, $id);
+            header("Location: manage_products.php");
+            exit();
+        }
 
-// Fetch all products
-$products = Product::getAllProducts($conn);
+        // Fetch all products
+        $products = Product::getAllProducts($conn);
 
-// Fetch product for editing
-$edit_product = null;
-if (isset($_GET['edit_id'])) {
-    $edit_id = $_GET['edit_id'];
-    $edit_product = Product::getProductById($conn, $edit_id);
-}
+        // Fetch product for editing
+        $edit_product = null;
+        if (isset($_GET['edit_id'])) {
+            $edit_id = $_GET['edit_id'];
+            $edit_product = Product::getProductById($conn, $edit_id);
+        }
 
 
 ?>
@@ -305,13 +317,13 @@ button:hover {
 /* Responsive Styles */
 @media screen and (max-width: 1024px) {
     .product-item {
-        width: calc(50% - 20px); /* 2 items per row for larger tablets */
+        width: calc(50% - 20px); /* 3 items per row for larger tablets */
     }
 }
 
 @media screen and (max-width: 768px) {
     .product-item {
-        width: calc(50% - 20px); /* 1 item per row for mobile screens */
+        width: calc(50% - 20px); /* 2 item per row for mobile screens */
     }
     .actions {
         flex-wrap: nowrap;

@@ -7,7 +7,6 @@ $conn = $database->connectDB();
 
 $userCRUD = new UserCRUD($conn);
 
-$modified_by = isset($_SESSION['user_id'])? $_SESSION['user_id']: null;
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(isset($_POST['update_user'])) {
@@ -18,7 +17,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $_POST['email'];
         $role = $_POST['role'];
 
-        $userCRUD->updateUser($id, $first_name, $last_name, $email, $role, $modified_by);
+        $userCRUD->updateUser($id, $first_name, $last_name, $email, $role, );
 
         header("Location: manage_users.php");
         exit();
@@ -28,7 +27,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $_POST['email'];
         $role = $_POST['role'];
 
-        $userCRUD->addUser($first_name, $last_name, $email, $role, $modified_by);
+        $userCRUD->addUser($first_name, $last_name, $email, $role);
         header("Location: manage_users.php");
         exit();
     }
@@ -63,14 +62,12 @@ class UserCRUD {
         return null;
     }
 
-    public function updateUser($id, $first_name, $last_name, $email, $role, $modified_by) {
+    public function updateUser($id, $first_name, $last_name, $email, $role) {
         $sql = "UPDATE users SET
                 first_name = :first_name,
                 last_name = :last_name,
                 email = :email,
-                role = :role,
-                modified_by = :modified_by, 
-                modified_at = NOW() 
+                role = :role
                 WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
@@ -79,7 +76,6 @@ class UserCRUD {
         $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':role', $role);
-        $stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -118,7 +114,6 @@ class UserCRUD {
         $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':role', $role);
-        $stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
@@ -163,12 +158,7 @@ if (isset($_GET['delete_id'])) {
 $users = $userCRUD->getAllUsers();
 $userCount = $userCRUD->getUserCount();
 
-// Fetch user for editing
-$edit_user = null;
-if (isset($_GET['edit_id'])) {
-    $edit_id = $_GET['edit_id'];
-    $edit_user = $userCRUD->getUserById($edit_id);
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -426,8 +416,6 @@ if (isset($_GET['edit_id'])) {
                         <th>Email</th>
                         <th>Role</th>
                         <th>Actions</th>
-                        <th>Modified By</th>
-                        <th>Modified At</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -440,22 +428,45 @@ if (isset($_GET['edit_id'])) {
                                 <a href="?edit_id=<?php echo $user['id']; ?>" class="btn btn-edit">Edit</a>
                                 <a href="?delete_id=<?php echo $user['id']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                             </td>
-                            <td>
-                                <?php
-                                if($user['modified_by']) {
-                                    $adminName = $userCRUD->getAdminNameById($user['modified_by']);
-                                    echo $adminName . "Modified";
-                                } else {
-                                    echo "Added";
-                                }
-                                ?>
-                         </td>
-                         <td><?php echo $user ['modified_at']; ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
+
+        <h2>Product Modification </h2>
+
+    <div class="table-container">
+    <table>
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Action</th>
+            <th>Modification Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $sql = "SELECT p.name AS product_name, aa.action, aa.action_time
+        FROM admin_actions aa
+        JOIN products p ON aa.product_id = p.id
+        ORDER BY aa.action_time DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $modifications = $stmt->fetchAll();
+
+        // Loop to show modifications
+        foreach ($modifications as $modification) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($modification['product_name']) . "</td>"; 
+            echo "<td>" . htmlspecialchars($modification['action']) . "</td>";
+            echo "<td>" . htmlspecialchars($modification['action_time']) . "</td>";
+            echo "</tr>";
+        }
+        ?>
+    </tbody>
+</table>
+    </div>
     </div>
 
     
