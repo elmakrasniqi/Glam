@@ -2,7 +2,7 @@
 session_start();
 
 require_once '../Backend/conn.php';
-require_once '../Backend/products.php';
+require_once '../Backend/Products.php';
 
 $database = new dbConnect();
 $conn = $database->connectDB();
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $target_file = $target_dir . basename($_FILES['product_image']['name']);
         move_uploaded_file($_FILES['product_image']['tmp_name'], $target_file);
 
-        // Create product
+        // Call createProduct to add the new product
         Product::createProduct($conn, $name, $price, "../image/" . $image, $brand);
         header("Location: manage_products.php");
         exit();
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $image = $_POST['existing_image'];
         }
 
-        // Update product
+        // Call updateProduct to update the product details
         Product::updateProduct($conn, $id, $name, $price, "../image/" . $image, $brand);
         header("Location: manage_products.php");
         exit();
@@ -55,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Handle delete request
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
+    // Call deleteProduct to delete the product
     Product::deleteProduct($conn, $id);
     header("Location: manage_products.php");
     exit();
@@ -67,6 +68,7 @@ $products = Product::getAllProducts($conn);
 $edit_product = null;
 if (isset($_GET['edit_id'])) {
     $edit_id = $_GET['edit_id'];
+    // Call getProductById to fetch the product for editing
     $edit_product = Product::getProductById($conn, $edit_id);
 }
 ?>
@@ -79,6 +81,7 @@ if (isset($_GET['edit_id'])) {
     <title>Manage Products</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+    
     body {
     font-family: 'Roboto', sans-serif;
     background-color: #f4f4f4;
@@ -259,7 +262,7 @@ button:hover {
     }
 }
 
-</style>
+    </style>
 </head>
 <body>
     <div class="admin-dashboard">

@@ -1,4 +1,5 @@
 <?php
+require_once 'conn.php';
 class Product {
     private $id;
     private $name;
