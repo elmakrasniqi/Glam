@@ -2,28 +2,10 @@
 session_start();
 
 require_once '../Backend/conn.php';
-require_once '../Backend/products.php';
+require_once '../Backend/Products.php';
 
 $database = new dbConnect();
 $conn = $database->connectDB();
-
-
-function logAdminAction($action, $product_id,) {
-    global $conn;
-    
-    // SQL query to insert into admin_actions table
-    $sql = "INSERT INTO admin_actions (product_id, action, action_time) 
-            VALUES (:product_id, :action, NOW())";
-    
-    // Prepare and bind the SQL query
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
-    $stmt->bindParam(':action', $action);
-    
-    // Execute the query
-    $stmt->execute();
-}
-
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -41,28 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $target_file = $target_dir . basename($_FILES['product_image']['name']);
         move_uploaded_file($_FILES['product_image']['tmp_name'], $target_file);
-        
-        $image_path = "../image/" . $image;
 
-
-        // Prepare the insert statement
-        $sql = "INSERT INTO products (name, price, image, brand, modified_at) 
-        VALUES (:name, :price, :image, :brand,  NOW())";
-
-        $stmt = $conn->prepare($sql);
-
-        // Bind the parameters
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':price', $price);
-        $stmt->bindParam(':image', $image_path);
-        $stmt->bindParam(':brand', $brand);
-
-        // Execute the query
-        $stmt->execute();
-
-        logAdminAction('insert', $conn->lastInsertId());
-
-        // Create product
+        // Call createProduct to add the new product
         Product::createProduct($conn, $name, $price, "../image/" . $image, $brand);
         header("Location: manage_products.php");
         exit();
@@ -83,56 +45,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $image = $_POST['existing_image'];
         }
 
-        
-        // Update product with modified parameter 
-        $sql = "UPDATE products SET 
-        name = :name,
-        price = :price,
-        image = :image,
-        brand = :brand,
-        modified_at = NOW() 
-        WHERE id = :id";
-
-        $stmt = $conn->prepare($sql);
-
-        // Bind the parameters
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':price', $price);
-        $stmt->bindParam(':image', $image_path);
-        $stmt->bindParam(':brand', $brand);
-
-        // Execute the query
-        $stmt->execute();
-
-        logAdminAction('update', $id,);
-
-        // Update product
+        // Call updateProduct to update the product details
         Product::updateProduct($conn, $id, $name, $price, "../image/" . $image, $brand);
         header("Location: manage_products.php");
         exit();
     }
 }
 
-        // Handle delete request
-        if (isset($_GET['delete_id'])) {
-            $id = $_GET['delete_id'];
-            Product::deleteProduct($conn, $id);
-            header("Location: manage_products.php");
-            exit();
-        }
+// Handle delete request
+if (isset($_GET['delete_id'])) {
+    $id = $_GET['delete_id'];
+    // Call deleteProduct to delete the product
+    Product::deleteProduct($conn, $id);
+    header("Location: manage_products.php");
+    exit();
+}
 
-        // Fetch all products
-        $products = Product::getAllProducts($conn);
+// Fetch all products
+$products = Product::getAllProducts($conn);
 
-        // Fetch product for editing
-        $edit_product = null;
-        if (isset($_GET['edit_id'])) {
-            $edit_id = $_GET['edit_id'];
-            $edit_product = Product::getProductById($conn, $edit_id);
-        }
-
-
+// Fetch product for editing
+$edit_product = null;
+if (isset($_GET['edit_id'])) {
+    $edit_id = $_GET['edit_id'];
+    // Call getProductById to fetch the product for editing
+    $edit_product = Product::getProductById($conn, $edit_id);
+}
 ?>
 
 <!DOCTYPE html>
@@ -143,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Manage Products</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+    
     body {
     font-family: 'Roboto', sans-serif;
     background-color: #f4f4f4;
@@ -282,7 +221,6 @@ button:hover {
 .actions {
     display: flex;
     gap: 10px;
-    text-align: center;
 }
 
 .actions a {
@@ -291,12 +229,9 @@ button:hover {
     border-radius: 4px;
     text-decoration: none;
     transition: background-color 0.3s ease;
-    display: inline-block;
-    margin-right: 10px;
 }
 
 .actions a:first-child {
-    margin-right: 0;
     background-color: rgb(128, 97, 114);
     color: white;
 }
@@ -317,20 +252,17 @@ button:hover {
 /* Responsive Styles */
 @media screen and (max-width: 1024px) {
     .product-item {
-        width: calc(50% - 20px); /* 3 items per row for larger tablets */
+        width: calc(50% - 20px); /* 2 items per row for larger tablets */
     }
 }
 
 @media screen and (max-width: 768px) {
     .product-item {
-        width: calc(50% - 20px); /* 2 item per row for mobile screens */
-    }
-    .actions {
-        flex-wrap: nowrap;
+        width: 100%; /* 1 item per row for mobile screens */
     }
 }
 
-</style>
+    </style>
 </head>
 <body>
     <div class="admin-dashboard">

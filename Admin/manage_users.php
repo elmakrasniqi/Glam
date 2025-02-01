@@ -1,164 +1,114 @@
 <?php
-session_start();
-require_once '../Backend/conn.php';
+require_once '../Backend/User.php';
 
-$database = new dbConnect();
-$conn = $database->connectDB();
-
-$userCRUD = new UserCRUD($conn);
-
-
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if(isset($_POST['update_user'])) {
-        
-        $id = $_POST['user_id'];
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
-        $email = $_POST['email'];
-        $role = $_POST['role'];
-
-        $userCRUD->updateUser($id, $first_name, $last_name, $email, $role, );
-
-        header("Location: manage_users.php");
-        exit();
-    } elseif (isset($_POST['add_user'])) {
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
-        $email = $_POST['email'];
-        $role = $_POST['role'];
-
-        $userCRUD->addUser($first_name, $last_name, $email, $role);
-        header("Location: manage_users.php");
-        exit();
-    }
-}
-        // Fetch all users
-        $users = $userCRUD->getAllUsers();
-        $userCount = $userCRUD->getUserCount();
-
-        // Fetch user for editing
-        $edit_user = null;
-        if (isset($_GET['edit_id'])) {
-            $edit_id = $_GET['edit_id'];
-            $edit_user = $userCRUD->getUserById($edit_id);
-        }
-
-class UserCRUD {
-    private $conn;
-
-    public function __construct($conn) {
-        $this->conn = $conn;
+class ManageUser extends User {
+    
+    public function __construct() {
+        parent::__construct();
     }
 
-    public function getAdminNameById($admin_id) {
-        $sql = "SELECT first_name, last_name FROM users WHERE id = :admin_id";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':admin_id', $admin_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $stmt = $stmt->fetch();
-        if($result) {
-            return $result['first_name'] . ' ' . $result['last_name'];
-        }
-        return null;
-    }
-
-    public function updateUser($id, $first_name, $last_name, $email, $role) {
-        $sql = "UPDATE users SET
-                first_name = :first_name,
-                last_name = :last_name,
-                email = :email,
-                role = :role
-                WHERE id = :id";
-
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->bindParam(':first_name', $first_name);
-        $stmt->bindParam(':last_name', $last_name);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':role', $role);
-
-        return $stmt->execute();
-    }
-
-    public function getUserById($id) {
-        $sql = "SELECT * FROM users WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch();
-    }
-
-    public function deleteUserById($id) {
-        $sql = "DELETE FROM users WHERE id = :id"; 
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);  
-        return $stmt->execute();
-    }
-
+    // Count users
     public function getUserCount() {
-        $sql = "SELECT COUNT(*) FROM users";
+        $sql = "SELECT COUNT(*) FROM " . $this->table;
         $stmt = $this->conn->query($sql);
         return $stmt->fetchColumn();
     }
 
-    public function getAllUsers() {
-        $sql = "SELECT * FROM users";
-        $stmt = $this->conn->query($sql);
-        return $stmt->fetchAll();
+    // Add a new user
+    public function addUser($first_name, $last_name, $email, $role, $password) {
+        // Check if the email already exists
+        $check_sql = "SELECT COUNT(*) FROM " . $this->table . " WHERE email = :email";
+        $check_stmt = $this->conn->prepare($check_sql);
+        $check_stmt->bindParam(":email", $email);
+        $check_stmt->execute();
+        $emailExists = $check_stmt->fetchColumn();
+
+        if ($emailExists > 0) {
+            return "error: Email already exists.";
+        }
+
+        // Insert new user if email is unique
+        $sql = "INSERT INTO " . $this->table . " (first_name, last_name, email, role, password) 
+                VALUES (:first_name, :last_name, :email, :role, :password)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":first_name", $first_name);
+        $stmt->bindParam(":last_name", $last_name);
+        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":role", $role);
+        $stmt->bindParam(":password", password_hash($password, PASSWORD_DEFAULT));
+        
+        return $stmt->execute() ? "success" : "error";
     }
 
-    public function addUser($first_name, $last_name, $email, $role) {
-        $sql = "INSERT INTO users (first_name, last_name, email, role) VALUES (:first_name, :last_name, :email, :role)";
+    // Update user details
+    public function updateUser($id, $first_name, $last_name, $email, $role, $password = null) {
+        $sql = "UPDATE " . $this->table . " 
+                SET first_name = :first_name, 
+                    last_name = :last_name, 
+                    email = :email, 
+                    role = :role";
+        
+        if ($password) {
+            $sql .= ", password = :password";
+        }
+
+        $sql .= " WHERE id = :id";
+        
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':first_name', $first_name);
-        $stmt->bindParam(':last_name', $last_name);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':role', $role);
+        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":first_name", $first_name);
+        $stmt->bindParam(":last_name", $last_name);
+        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":role", $role);
+
+        if ($password) {
+            $stmt->bindParam(":password", password_hash($password, PASSWORD_DEFAULT));
+        }
+
         return $stmt->execute();
     }
-
 }
 
+// Create an instance of ManageUser
+$userManager = new ManageUser();
 
-// Handle form submissions
+// Initialize edit_user to avoid undefined variable warnings
+$edit_user = [];
+
+// Handling form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_user'])) {
-        // Add a new user
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
-        $email = $_POST['email'];
-        $role = $_POST['role'];
-
-        $userCRUD->addUser($first_name, $last_name, $email, $role);
-        header("Location: manage_users.php");
-        exit();
+        $result = $userManager->addUser($_POST['first_name'], $_POST['last_name'], $_POST['email'], $_POST['role'], $_POST['password']);
+        
+        if ($result === "success") {
+            header("Location: manage_users.php");
+            exit();
+        } else {
+            echo "<script>alert('Error: Email already exists!');</script>";
+        }
     } elseif (isset($_POST['update_user'])) {
-        // Update an existing user
-        $id = $_POST['user_id'];
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
-        $email = $_POST['email'];
-        $role = $_POST['role'];
-
-        $userCRUD->updateUser($id, $first_name, $last_name, $email, $role);
+        $password = empty($_POST['password']) ? null : $_POST['password'];
+        $userManager->updateUser($_POST['user_id'], $_POST['first_name'], $_POST['last_name'], $_POST['email'], $_POST['role'], $password);
         header("Location: manage_users.php");
         exit();
     }
 }
 
-// Handle delete request
+// Handling delete request
 if (isset($_GET['delete_id'])) {
-    $id = $_GET['delete_id'];
-    $userCRUD->deleteUserById($id);
+    $userManager->delete($_GET['delete_id']);
     header("Location: manage_users.php");
     exit();
 }
 
-// Fetch all users
-$users = $userCRUD->getAllUsers();
-$userCount = $userCRUD->getUserCount();
+// Fetch user data if editing
+if (isset($_GET['edit_id'])) {
+    $edit_user = $userManager->readOne($_GET['edit_id']);
+}
 
-
+// Fetching all users
+$users = $userManager->readAll();
+$userCount = $userManager->getUserCount();
 ?>
 
 <!DOCTYPE html>
@@ -361,7 +311,8 @@ $userCount = $userCRUD->getUserCount();
             }
         }
     </style>
-    <body>
+</head>
+<body>
     <a href="dashboard.php" class="back-button">
         <i class="fas fa-arrow-left"></i>
     </a>
@@ -395,6 +346,11 @@ $userCount = $userCRUD->getUserCount();
                 <div class="form-group">
                     <label for="role">Role:</label>
                     <input type="text" id="role" name="role" value="<?php echo $edit_user ? $edit_user['role'] : ''; ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" <?php echo !$edit_user ? 'required' : ''; ?>>
                 </div>
 
                 <div class="form-group">
@@ -468,7 +424,5 @@ $userCount = $userCRUD->getUserCount();
 </table>
     </div>
     </div>
-
-    
 </body>
 </html>
