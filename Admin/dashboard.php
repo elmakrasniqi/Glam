@@ -1,95 +1,34 @@
 <?php
 require_once '../Backend/conn.php';
+require_once 'ProductCRUD.php';
+require_once 'MessageCRUD.php';
+require_once 'UserCRUD.php';
+require_once '../Backend/Dashboard.php';
 
-class MessageCRUD {
-    private $conn;
 
-    public function __construct($conn) {
-        $this->conn = $conn;
-    }
+  //Check if user is an admin
+/*if ($_SESSION['role'] != 'admin') {
+    header("Location: ../Main/Login.php");
+    exit();
+}*/
 
-    public function getMessageCount($conn) {
-        $sql = "SELECT COUNT(*) FROM contacts";
-        $stmt = $this->conn->query($sql);
-        return $stmt->fetchColumn();
-    }
-}
-
-class ProductCRUD {
-    private $conn;
-
-    public function __construct($conn) {
-        $this->conn = $conn;
-    
-    }
-        public function getAllProducts() {
-            $sql = "SELECT * FROM products";
-            $stmt = $this->conn->query($sql);
-            return $stmt->fetchAll();
-        }
-    public function getPRoductCount() {
-        $sql = "SELECT COUNT(*) FROM products";
-        $stmt = $this->conn->query($sql);
-        return $stmt->fetchColumn();
-    }
-}
-class UserCRUD {
-    private $conn;
-
-    public function __construct($conn) {
-        $this->conn = $conn;
-    }
-
-    public function getUserCount() {
-        $sql = "SELECT COUNT(*) FROM users";
-        $stmt = $this->conn->query($sql);
-        return $stmt->fetchColumn();
-    }
-}
 $database = new dbConnect();
 $conn = $database->connectDB();
 
-$productCrud = new ProductCRUD($conn);
-$products = $productCrud->getAllProducts();
+if($conn) {
+//Instance for Dashboard class
+$dashboard = new Dashboard($conn);
 
-$productCount = count($products);
-
-$messageCrud = new MessageCRUD($conn);
-$messageCount = $messageCrud->getMessageCount($conn);
-
-$userCrud = new UserCRUD($conn);  
-$userCount = $userCrud->getUserCount(); 
-
-class WeeklyStats {
-
-private $conn;
-
-public function __construct($conn) {
-    $this->conn = $conn;
+ // Get the statistics
+ $productCount = $dashboard->getProductCount();
+ $messageCount = $dashboard->getMessageCount();
+ $userCount = $dashboard->getUserCount();
+ 
+//Weekly stats
+$weeklyProducts = $dashboard->getWeeklyProductCount();
+$weeklyMessages = $dashboard->getWeeklyMessageCount();
+$weeklyUsers = $dashboard->getWeeklyUserCount();
 }
-
-public function getWeeklyProductCount() {
-    $sql = "SELECT COUNT(*)FROM products WHERE created_at > DATE_SUB(NOW(), INTERVAL 1 WEEK)";
-    $stmt = $this->conn->query($sql);
-    return  $stmt->fetchColumn();
-}
-
-public function getWeeklyMessageCount() {
-    $sql = "SELECT COUNT(*)FROM contacts WHERE created_at > DATE_SUB(NOW(), INTERVAL 1 WEEK)";
-    $stmt = $this->conn->query($sql);
-    return  $stmt->fetchColumn();
-    }
-
-public function getWeeklyUserCount(){
-    $sql = "SELECT COUNT(*) FROM users WHERE created_at > DATE_SUB(NOW(), INTERVAL 1 WEEK)";
-    $stmt = $this->conn->query($sql);
-    return $stmt->fetchColumn();
-    }
-}
-$weelkyStats = new WeeklyStats($conn);
-$weeklyProducts = $weelkyStats->getWeeklyProductCount();
-$weeklyMessages = $weelkyStats->getWeeklyMessageCount();
-$weeklyUsers = $weelkyStats->getWeeklyUserCount();
 ?>
 
 <!DOCTYPE html>
@@ -263,18 +202,17 @@ $weeklyUsers = $weelkyStats->getWeeklyUserCount();
     }
 
     .weekly-activity {
-        width: 100%;
-        margin-top: 60px; 
-        border-radius: 10px;
+        margin-top: 60px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
         padding: 20px;
-        height: auto;
-        min-height: 300px;
+        overflow: hidden;
     }
 
     canvas {
         max-width: 100%;
-        max-width:300px;
-        height: 300px;
+        height: 250px;
     }
     
 }
@@ -350,8 +288,8 @@ $weeklyUsers = $weelkyStats->getWeeklyUserCount();
                 <div class="stat-card">
                     <i class="fas fa-box-open stat-icon"></i>
                     <h3>Total Products</h3>
-                    <p><?php echo count($products); ?> Products</p> 
-                </div>
+                    <p><?php echo $productCount; ?> Products</p>
+                    </div>
                 <div class="stat-card">
                     <i class="fas fa-comment-dots stat-icon"></i>
                     <h3>Total Messages</h3>
