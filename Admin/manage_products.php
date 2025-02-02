@@ -47,6 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Call updateProduct to update the product details
         Product::updateProduct($conn, $id, $name, $price, "../image/" . $image, $brand);
+        $product = new Product($id, $name, $price, "../image/" . $image, $brand);
+       
         header("Location: manage_products.php");
         exit();
     }
@@ -220,7 +222,11 @@ button:hover {
 
 .actions {
     display: flex;
+    justify-content: flex-start;
     gap: 10px;
+    flex-wrap: nowrap;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .actions a {
@@ -229,13 +235,15 @@ button:hover {
     border-radius: 4px;
     text-decoration: none;
     transition: background-color 0.3s ease;
+    display: inline-block;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .actions a:first-child {
     background-color: rgb(128, 97, 114);
     color: white;
 }
-
 .actions a:first-child:hover {
     background-color: rgb(100, 75, 90);
 }
@@ -254,13 +262,23 @@ button:hover {
     .product-item {
         width: calc(50% - 20px); /* 2 items per row for larger tablets */
     }
+
 }
 
-@media screen and (max-width: 768px) {
+    @media screen and (max-width: 768px) {
     .product-item {
-        width: 100%; /* 1 item per row for mobile screens */
+        width: calc(50% - 20px); /* 1 item per row for mobile screens */
     }
+    .actions {
+        justify-content: flex-start;
+    }
+    .actions a{
+        font-size: 12px; 
+        padding: 5px 8px; 
+    }
+    
 }
+
 
     </style>
 </head>

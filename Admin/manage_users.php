@@ -1,5 +1,10 @@
 <?php
 require_once '../Backend/User.php';
+require_once '../Backend/Products.php';
+require_once '../Backend/conn.php';
+
+$db = new dbConnect();
+$pdo = $db->connectDB();
 
 class ManageUser extends User {
     
@@ -67,6 +72,8 @@ class ManageUser extends User {
 
         return $stmt->execute();
     }
+    
+    
 }
 
 // Create an instance of ManageUser
@@ -93,6 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
+
+$modifications = Product::getProductModifications($pdo);
 
 // Handling delete request
 if (isset($_GET['delete_id'])) {
@@ -403,13 +412,9 @@ $userCount = $userManager->getUserCount();
     </thead>
     <tbody>
         <?php
-        $sql = "SELECT p.name AS product_name, aa.action, aa.action_time
-        FROM admin_actions aa
-        JOIN products p ON aa.product_id = p.id
-        ORDER BY aa.action_time DESC";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        $modifications = $stmt->fetchAll();
+       
+       //Fetch product modification
+       $modifications = Product::getProductModifications($pdo); 
 
         // Loop to show modifications
         foreach ($modifications as $modification) {

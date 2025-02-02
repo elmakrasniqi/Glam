@@ -32,5 +32,10 @@ class MessageCRUD {
         $stmt = $this->conn->query($sql);
         return $stmt->fetchAll();
     }
+    public function getWeeklyMessageCount() {
+        $sql = "SELECT COUNT(*) FROM contacts WHERE created_at > DATE_SUB(NOW(), INTERVAL 1 WEEK)";
+        $stmt = $this->conn->query($sql);
+        return $stmt->fetchColumn();
+    }
 }
 ?>
