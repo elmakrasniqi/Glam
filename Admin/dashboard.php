@@ -157,11 +157,11 @@ $weeklyUsers = $dashboard->getWeeklyUserCount();
         }
         .weekly-activity {
             width: 100%;
-            margin-top: 20px;
+            margin-top: 10px;
             border-radius: 10px;
             padding: 10px;
             height: auto;
-            min-height: 200px;
+            min-height: 100px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -170,6 +170,7 @@ $weeklyUsers = $dashboard->getWeeklyUserCount();
         canvas {
             width: 100% !imortant;
             max-width: 600px;
+            max-height: 300px;
             border-radius: 10px;
             justify-content: center;
             align-items: center;
@@ -303,11 +304,11 @@ $weeklyUsers = $dashboard->getWeeklyUserCount();
     </div>
 <div class="weekly-activity">
     <h2>Weekly Activity</h2>
-    <canvas id="activityChart" width="600" height="100"></canvas>
+    <canvas id="activityChart" width="600" height="200"></canvas>
     <script>
         var ctx = document.getElementById('activityChart').getContext('2d');
         var activityChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
                 labels: ['Products Added', 'Messages Received', 'Users Registered'],
                 datasets: [{

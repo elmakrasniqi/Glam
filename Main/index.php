@@ -70,31 +70,31 @@
       <section id="products">
         <div class="product-list" data-name="Jean Paul Gaultier">
         <div class="product-item" data-name="Burberry">
-          <img src="image/Burberry Her Intense EDP set.png" alt="Burberry Her Intense EDP set">
+          <img src="../image/Burberry Her Intense EDP set.png" alt="Burberry Her Intense EDP set">
           <h3>Burberry Her Intense EDP set</h3>
           <p class="price">80.89€</p>
           <button>Add to cart</button>
        </div>
         <div class="product-item" data-name="Essence">
-           <img src="image/ESSENCE BABY GOT BLUSH 10.png" alt="Essence Baby Got Blush 10">
+           <img src="../image/ESSENCE BABY GOT BLUSH 10.png" alt="Essence Baby Got Blush 10">
            <h3> Essence Baby Got Blush 10</h3>
            <p class="price">2.99€</p>
           <button>Add to cart</button>
         </div>
        <div class="product-item" data-name="Loreal">
-          <img src="image/Lorealhyaluronmask.png" alt="Loreal Hyaluron Mask">
+          <img src="../image/Lorealhyaluronmask.png" alt="Loreal Hyaluron Mask">
           <h3> Loreal Hyaluron Mask</h3>
           <p class="price">7.80€</p>
           <button>Add to cart</button>
         </div>
         <div class="product-item" data-name="Maybelline">
-          <img src="image/Maybellinemascaragloss.png" alt="Maybelline Lip-Gloss">
+          <img src="../image/Maybellinemascaragloss.png" alt="Maybelline Lip-Gloss">
           <h3>Maybelline Lip-Gloss</h3>
           <p class="price">4.00€</p>
           <button>Add to cart</button>
        </div>
        <div class="product-item" data-name="Note">
-          <img src="image/NoteBrowwax.png" alt="Note Brow Wax">
+          <img src="../image/NoteBrowwax.png" alt="Note Brow Wax">
           <h3>Note Brow Wax </h3>
           <p class="price">10.00€</p>
           <button>Add to cart</button>

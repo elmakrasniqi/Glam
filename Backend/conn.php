@@ -1,7 +1,7 @@
 <?php
 class dbConnect{
     private $conn =null;
-    private $servername = "localhost"; 
+    private $servername = "localhost:3307"; 
     private $dbname = "glam_db"; 
     private $username = "root"; 
     private $password = ""; 
