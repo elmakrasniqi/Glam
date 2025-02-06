@@ -99,7 +99,9 @@ class Product {
         if ($stmt->execute()) {
         // Create an instance of Product and log the action
         $product = new Product($pdo->lastInsertId(), $name, $price, $image, $brand);            
-        $product->logAdminAction('insert', $id);   
+        if(isset($id)) {
+                Product::logAdminAction('insert', $id); 
+        }  
         return true;
         }
         return false;
