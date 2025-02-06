@@ -88,14 +88,23 @@ class Product {
 
     // Create a new product
     public static function createProduct($pdo, $name, $price, $image, $brand) {
-        $query = "INSERT INTO products (name, price, image, brand) VALUES (:name, :price, :image, :brand)";
+        $query = "INSERT INTO products (name, price, image, brand, modified_at) 
+        VALUES (:name, :price, :image, :brand,  NOW())";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':price', $price);
         $stmt->bindParam(':image', $image);
         $stmt->bindParam(':brand', $brand);
-        return $stmt->execute();
+
+        if ($stmt->execute()) {
+        // Create an instance of Product and log the action
+        $product = new Product($pdo->lastInsertId(), $name, $price, $image, $brand);            
+        $product->logAdminAction('insert', $id);   
+        return true;
+        }
+        return false;
     }
+    
 
     // Read a single product by ID
     public static function getProductById($pdo, $id) {
@@ -119,14 +128,26 @@ class Product {
 
     // Update an existing product
     public static function updateProduct($pdo, $id, $name, $price, $image, $brand) {
-        $query = "UPDATE products SET name = :name, price = :price, image = :image, brand = :brand WHERE id = :id";
+        $query = "UPDATE products SET 
+        name = :name,
+        price = :price,
+        image = :image,
+        brand = :brand,
+        modified_at = NOW() 
+        WHERE id = :id";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':price', $price);
         $stmt->bindParam(':image', $image);
         $stmt->bindParam(':brand', $brand);
-        return $stmt->execute();
+        if ($stmt->execute()) {
+        // Create an instance of Product and log the action
+        $product = new Product($id, $name, $price, $image, $brand);
+        $product->logAdminAction('update', $id);
+            return true;
+        }
+        return false;
     }
 
     // Delete a product by ID
@@ -135,6 +156,32 @@ class Product {
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
+    }
+
+    public static function logAdminAction($action, $product_id) {
+        global $conn;
+        
+        // SQL query to insert into admin_actions table
+        $sql = "INSERT INTO admin_actions (product_id, action, action_time) 
+                VALUES (:product_id, :action, NOW())";
+        
+        // Prepare and bind the SQL query
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+        $stmt->bindParam(':action', $action);
+        
+        // Execute the query
+        $stmt->execute();
+    }
+    //Get modifications that are made
+    public static function getProductModifications($pdo) {
+        $sql = "SELECT p.name AS product_name, aa.action, aa.action_time
+                FROM admin_actions aa
+                JOIN products p ON aa.product_id = p.id
+                ORDER BY aa.action_time DESC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>

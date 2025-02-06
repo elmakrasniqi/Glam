@@ -1,5 +1,10 @@
 <?php
 require_once '../Backend/User.php';
+require_once '../Backend/Products.php';
+require_once '../Backend/conn.php';
+
+$db = new dbConnect();
+$pdo = $db->connectDB();
 
 class ManageUser extends User {
     
@@ -67,6 +72,8 @@ class ManageUser extends User {
 
         return $stmt->execute();
     }
+    
+    
 }
 
 // Create an instance of ManageUser
@@ -93,6 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
+
+$modifications = Product::getProductModifications($pdo);
 
 // Handling delete request
 if (isset($_GET['delete_id'])) {
@@ -231,6 +240,7 @@ $userCount = $userManager->getUserCount();
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
+            border-radius: 6px;
         }
 
         table th,
@@ -306,6 +316,7 @@ $userCount = $userManager->getUserCount();
             .btn-delete {
                 width: 100%;
                 text-align: center;
+                padding: 5px;
             }
         }
     </style>
@@ -387,6 +398,36 @@ $userCount = $userManager->getUserCount();
                 </tbody>
             </table>
         </div>
+
+        <h2>Product Modification </h2>
+
+    <div class="table-container">
+    <table>
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Action</th>
+            <th>Modification Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+       
+       //Fetch product modification
+       $modifications = Product::getProductModifications($pdo); 
+
+        // Loop to show modifications
+        foreach ($modifications as $modification) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($modification['product_name']) . "</td>"; 
+            echo "<td>" . htmlspecialchars($modification['action']) . "</td>";
+            echo "<td>" . htmlspecialchars($modification['action_time']) . "</td>";
+            echo "</tr>";
+        }
+        ?>
+    </tbody>
+</table>
+    </div>
     </div>
 </body>
 </html>
