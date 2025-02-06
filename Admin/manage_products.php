@@ -2,7 +2,7 @@
 session_start();
 
 require_once '../Backend/conn.php';
-require_once '../Backend/products.php';
+require_once '../Backend/Products.php';
 
 $database = new dbConnect();
 $conn = $database->connectDB();
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $target_file = $target_dir . basename($_FILES['product_image']['name']);
         move_uploaded_file($_FILES['product_image']['tmp_name'], $target_file);
 
-        // Create product
+        // Call createProduct to add the new product
         Product::createProduct($conn, $name, $price, "../image/" . $image, $brand);
         header("Location: manage_products.php");
         exit();
@@ -45,8 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $image = $_POST['existing_image'];
         }
 
-        // Update product
+        // Call updateProduct to update the product details
         Product::updateProduct($conn, $id, $name, $price, "../image/" . $image, $brand);
+        $product = new Product($id, $name, $price, "../image/" . $image, $brand);
+       
         header("Location: manage_products.php");
         exit();
     }
@@ -55,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Handle delete request
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
+    // Call deleteProduct to delete the product
     Product::deleteProduct($conn, $id);
     header("Location: manage_products.php");
     exit();
@@ -67,6 +70,7 @@ $products = Product::getAllProducts($conn);
 $edit_product = null;
 if (isset($_GET['edit_id'])) {
     $edit_id = $_GET['edit_id'];
+    // Call getProductById to fetch the product for editing
     $edit_product = Product::getProductById($conn, $edit_id);
 }
 ?>
@@ -79,6 +83,7 @@ if (isset($_GET['edit_id'])) {
     <title>Manage Products</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+    
     body {
     font-family: 'Roboto', sans-serif;
     background-color: #f4f4f4;
@@ -217,7 +222,11 @@ button:hover {
 
 .actions {
     display: flex;
+    justify-content: flex-start;
     gap: 10px;
+    flex-wrap: nowrap;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .actions a {
@@ -226,13 +235,15 @@ button:hover {
     border-radius: 4px;
     text-decoration: none;
     transition: background-color 0.3s ease;
+    display: inline-block;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .actions a:first-child {
     background-color: rgb(128, 97, 114);
     color: white;
 }
-
 .actions a:first-child:hover {
     background-color: rgb(100, 75, 90);
 }
@@ -251,15 +262,25 @@ button:hover {
     .product-item {
         width: calc(50% - 20px); /* 2 items per row for larger tablets */
     }
+
 }
 
-@media screen and (max-width: 768px) {
+    @media screen and (max-width: 768px) {
     .product-item {
-        width: 100%; /* 1 item per row for mobile screens */
+        width: calc(50% - 20px); /* 1 item per row for mobile screens */
     }
+    .actions {
+        justify-content: flex-start;
+    }
+    .actions a{
+        font-size: 12px; 
+        padding: 5px 8px; 
+    }
+    
 }
 
-</style>
+
+    </style>
 </head>
 <body>
     <div class="admin-dashboard">
