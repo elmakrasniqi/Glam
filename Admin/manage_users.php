@@ -12,17 +12,16 @@ class ManageUser extends User {
         parent::__construct();
     }
 
-    // Count users
+
     public function getUserCount() {
         $sql = "SELECT COUNT(*) FROM " . $this->table;
         $stmt = $this->conn->query($sql);
         return $stmt->fetchColumn();
     }
 
-    // Add a new user
     public function addUser($first_name, $last_name, $email, $role, $password) {
-        // Check if the email already exists
-        $check_sql = "SELECT COUNT(*) FROM " . $this->table . " WHERE email = :email";
+
+        $check_sql = "SELECT COUNT(*) FROM " . $this->table . " WHERE email = :email"; //check email
         $check_stmt = $this->conn->prepare($check_sql);
         $check_stmt->bindParam(":email", $email);
         $check_stmt->execute();
@@ -31,8 +30,7 @@ class ManageUser extends User {
         if ($emailExists > 0) {
             return "error: Email already exists.";
         }
-
-        // Insert new user if email is unique
+        
         $sql = "INSERT INTO " . $this->table . " (first_name, last_name, email, role, password) 
                 VALUES (:first_name, :last_name, :email, :role, :password)";
         $stmt = $this->conn->prepare($sql);
@@ -45,7 +43,7 @@ class ManageUser extends User {
         return $stmt->execute() ? "success" : "error";
     }
 
-    // Update user details
+
     public function updateUser($id, $first_name, $last_name, $email, $role, $password = null) {
         $sql = "UPDATE " . $this->table . " 
                 SET first_name = :first_name, 
@@ -76,13 +74,12 @@ class ManageUser extends User {
     
 }
 
-// Create an instance of ManageUser
+
 $userManager = new ManageUser();
 
-// Initialize edit_user to avoid undefined variable warnings
 $edit_user = [];
 
-// Handling form submissions
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_user'])) {
         $result = $userManager->addUser($_POST['first_name'], $_POST['last_name'], $_POST['email'], $_POST['role'], $_POST['password']);
@@ -103,19 +100,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $modifications = Product::getProductModifications($pdo);
 
-// Handling delete request
+
 if (isset($_GET['delete_id'])) {
     $userManager->delete($_GET['delete_id']);
     header("Location: manage_users.php");
     exit();
 }
 
-// Fetch user data if editing
+
 if (isset($_GET['edit_id'])) {
     $edit_user = $userManager->readOne($_GET['edit_id']);
 }
 
-// Fetching all users
+
 $users = $userManager->readAll();
 $userCount = $userManager->getUserCount();
 ?>
@@ -129,7 +126,6 @@ $userCount = $userManager->getUserCount();
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        /* General Styles */
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f4f4f4;
@@ -413,10 +409,9 @@ $userCount = $userManager->getUserCount();
     <tbody>
         <?php
        
-       //Fetch product modification
+       
        $modifications = Product::getProductModifications($pdo); 
 
-        // Loop to show modifications
         foreach ($modifications as $modification) {
             echo "<tr>";
             echo "<td>" . htmlspecialchars($modification['product_name']) . "</td>"; 

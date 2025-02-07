@@ -5,32 +5,26 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = new User();
 
-    // Check if all fields are set
     if (empty($_POST['first_name']) || empty($_POST['last_name']) || empty($_POST['email']) || empty($_POST['password'])) {
         echo "Please fill all fields!";
     } else {
-        // Retrieve form data
         $user->first_name = $_POST['first_name'];
         $user->last_name = $_POST['last_name'];
         $user->email = $_POST['email'];
         $user->password = $_POST['password'];
-        $user->role = isset($_POST['role']) ? $_POST['role'] : 0; // Default to user role (0)
+        $user->role = isset($_POST['role']) ? $_POST['role'] : 0; //0 automatically
 
-        // Try to register the user
         if ($user->register()) {
-            // Get user data after registration
-            $userData = $user->getUserByEmail($user->email); // Implement this function in your User class
+            
+            $userData = $user->getUserByEmail($user->email); 
 
             if ($userData) {
-                // Set session variables
                 $_SESSION['user_id'] = $userData['id'];
                 $_SESSION['role'] = $userData['role'];
 
-                // Set cookies for persistent login
                 setcookie('user_email', $user->email, time() + (86400 * 30), "/");
                 setcookie('user_id', $userData['id'], time() + (86400 * 30), "/");
 
-                // Redirect to dashboard based on role
                 if ($userData['role'] == 1) {
                     header("Location: ../Admin/dashboard.php");
                 } else {
@@ -38,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 exit;
             }
-        } else {
+            } else {
             echo "Registration failed. Email may already be in use.";
         }
     }
@@ -138,34 +132,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const email = signupForm.querySelector('input[name="email"]').value.trim();
             const password = signupForm.querySelector('input[name="password"]').value.trim();
 
-            // Regex for email validation
             const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
 
-            // Regex for name validation (only letters, spaces, and dashes allowed)
             const nameRegex = /^[a-zA-Z\s-]+$/;
 
-            // Validate first name
             if (!nameRegex.test(firstName)) {
                 alert('First name can only contain letters, spaces, and dashes.');
                 event.preventDefault();
                 return;
             }
 
-            // Validate last name
             if (!nameRegex.test(lastName)) {
                 alert('Last name can only contain letters, spaces, and dashes.');
                 event.preventDefault();
                 return;
             }
 
-            // Validate email
             if (!emailRegex.test(email)) {
                 alert('Please enter a valid email address.');
                 event.preventDefault();
                 return;
             }
 
-            // Validate password length
             if (password.length < 6) {
                 alert('Password must be at least 6 characters long.');
                 event.preventDefault();

@@ -17,7 +17,7 @@ class User {
         $this->conn = $database->connectDB();
     }
 
-    // Login method
+    
     public function login($email, $password) {
         $sql = "SELECT * FROM " . $this->table . " WHERE email = :email";
         $stmt = $this->conn->prepare($sql);
@@ -33,7 +33,6 @@ class User {
         return false;
     }
 
-    // Register method
     public function register() {
         $sql = "SELECT * FROM " . $this->table . " WHERE email = :email";
         $stmt = $this->conn->prepare($sql);
@@ -41,15 +40,15 @@ class User {
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
-            return false;  // Email already exists
+            return false;  // email exists
         }
 
         $sql = "INSERT INTO " . $this->table . " (first_name, last_name, email, password, role) 
                 VALUES (:first_name, :last_name, :email, :password, :role)";
         $stmt = $this->conn->prepare($sql);
 
-        // Hash the password before storing it
-        $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+        
+        $this->password = password_hash($this->password, PASSWORD_BCRYPT); //hash password
 
         $stmt->bindParam(":first_name", $this->first_name);
         $stmt->bindParam(":last_name", $this->last_name);
@@ -60,14 +59,13 @@ class User {
         return $stmt->execute();
     }
 
-    // Update user
     public function update() {
         $sql = "UPDATE " . $this->table . " 
                 SET first_name = :first_name, 
                     last_name = :last_name, 
                     email = :email, 
                     role = :role" . 
-                    // Add password conditionally if it's set
+
                     ($this->password ? ", password = :password" : "") . 
                 " WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
@@ -78,7 +76,6 @@ class User {
         $stmt->bindParam(":role", $this->role);
         $stmt->bindParam(":id", $this->id);
 
-        // If a new password is provided, hash it and bind it
         if ($this->password) {
             $this->password = password_hash($this->password, PASSWORD_BCRYPT);
             $stmt->bindParam(":password", $this->password);
@@ -87,7 +84,6 @@ class User {
         return $stmt->execute();
     }
 
-    // Read all users
     public function readAll() {
         $sql = "SELECT * FROM " . $this->table;
         $stmt = $this->conn->prepare($sql);
@@ -95,7 +91,6 @@ class User {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Read single user by ID
     public function readOne($id) {
         $sql = "SELECT * FROM " . $this->table . " WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
@@ -104,7 +99,6 @@ class User {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Delete user
     public function delete($id) {
         $sql = "DELETE FROM " . $this->table . " WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
@@ -112,7 +106,6 @@ class User {
         return $stmt->execute();
     }
 
-    // Get user by email
     public function getUserByEmail($email) {
         $sql = "SELECT * FROM " . $this->table . " WHERE email = :email";
         $stmt = $this->conn->prepare($sql);

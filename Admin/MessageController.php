@@ -1,13 +1,14 @@
 <?php
 require_once 'conn.php'; 
-require_once '../Admin/MessageCRUD.php'; 
-require_once '../Admin/ReplyCRUD.php'; 
+require_once '../Backend/MessageCRUD.php'; 
+require_once '../Backend/ReplyCRUD.php'; 
 
 class MessageController {
     private $messageCRUD;
     private $replyCRUD;
 
     public function __construct() {
+
         $db = new dbConnect();
         $conn = $db->connectDB(); 
         $this->messageCRUD = new MessageCRUD($conn);
