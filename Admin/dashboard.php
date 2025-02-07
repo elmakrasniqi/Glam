@@ -6,25 +6,19 @@ require_once 'UserCRUD.php';
 require_once '../Backend/Dashboard.php';
 
 
-  //Check if user is an admin
-/*if ($_SESSION['role'] != 'admin') {
-    header("Location: ../Main/Login.php");
-    exit();
-}*/
 
 $database = new dbConnect();
 $conn = $database->connectDB();
 
 if($conn) {
-//Instance for Dashboard class
 $dashboard = new Dashboard($conn);
 
- // Get the statistics
+
  $productCount = $dashboard->getProductCount();
  $messageCount = $dashboard->getMessageCount();
  $userCount = $dashboard->getUserCount();
  
-//Weekly stats
+
 $weeklyProducts = $dashboard->getWeeklyProductCount();
 $weeklyMessages = $dashboard->getWeeklyMessageCount();
 $weeklyUsers = $dashboard->getWeeklyUserCount();
@@ -157,11 +151,11 @@ $weeklyUsers = $dashboard->getWeeklyUserCount();
         }
         .weekly-activity {
             width: 100%;
-            margin-top: 20px;
+            margin-top: 10px;
             border-radius: 10px;
             padding: 10px;
             height: auto;
-            min-height: 200px;
+            min-height: 100px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -170,10 +164,28 @@ $weeklyUsers = $dashboard->getWeeklyUserCount();
         canvas {
             width: 100% !imortant;
             max-width: 600px;
+            max-height: 300px;
             border-radius: 10px;
             justify-content: center;
             align-items: center;
         }
+       
+     @media screen and (max-width: 768px) {
+
+    .weekly-activity {
+        margin-top: 60px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    canvas {
+        max-width: 100%;
+        height: 250px;
+    }
+   }
        
      @media screen and (max-width: 768px) {
         .sidebar {
@@ -307,7 +319,7 @@ $weeklyUsers = $dashboard->getWeeklyUserCount();
     <script>
         var ctx = document.getElementById('activityChart').getContext('2d');
         var activityChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
                 labels: ['Products Added', 'Messages Received', 'Users Registered'],
                 datasets: [{

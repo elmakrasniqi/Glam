@@ -2,12 +2,10 @@
 require_once '../Backend/conn.php';
 require_once '../Backend/Products.php';
 
-// Initialize database connection
 $db = new dbConnect();
 $pdo = $db->connectDB();
 
-// Fetch all products from the database
-$products = Product::getAllProducts($pdo);
+$products = Product::getAllProducts($pdo); // get all products
 ?>
 <!DOCTYPE html>
 <html lang="en">

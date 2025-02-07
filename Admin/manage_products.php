@@ -7,16 +7,16 @@ require_once '../Backend/Products.php';
 $database = new dbConnect();
 $conn = $database->connectDB();
 
-// Handle form submissions
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_product'])) {
-        // Add a new product
+
         $name = $_POST['product_name'];
         $price = $_POST['product_price'];
         $brand = $_POST['product_brand'];
         $image = $_FILES['product_image']['name'];
 
-        // Upload image
+
         $target_dir = "../image/";
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0777, true);
@@ -24,18 +24,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $target_file = $target_dir . basename($_FILES['product_image']['name']);
         move_uploaded_file($_FILES['product_image']['tmp_name'], $target_file);
 
-        // Call createProduct to add the new product
         Product::createProduct($conn, $name, $price, "../image/" . $image, $brand);
         header("Location: manage_products.php");
         exit();
     } elseif (isset($_POST['update_product'])) {
-        // Update an existing product
+ 
         $id = $_POST['product_id'];
         $name = $_POST['product_name'];
         $price = $_POST['product_price'];
         $brand = $_POST['product_brand'];
 
-        // Handle image update
+
         if ($_FILES['product_image']['name']) {
             $image = $_FILES['product_image']['name'];
             $target_dir = "../image/";
@@ -45,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $image = $_POST['existing_image'];
         }
 
-        // Call updateProduct to update the product details
+
         Product::updateProduct($conn, $id, $name, $price, "../image/" . $image, $brand);
         $product = new Product($id, $name, $price, "../image/" . $image, $brand);
        
@@ -54,23 +53,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Handle delete request
+
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
-    // Call deleteProduct to delete the product
+
     Product::deleteProduct($conn, $id);
     header("Location: manage_products.php");
     exit();
 }
 
-// Fetch all products
+
 $products = Product::getAllProducts($conn);
 
-// Fetch product for editing
+
 $edit_product = null;
 if (isset($_GET['edit_id'])) {
     $edit_id = $_GET['edit_id'];
-    // Call getProductById to fetch the product for editing
+  
     $edit_product = Product::getProductById($conn, $edit_id);
 }
 ?>
@@ -181,7 +180,7 @@ button:hover {
     background-color: rgb(100, 75, 90);
 }
 
-/* Product List Styles */
+
 .product-list {
     margin-top: 20px;
     display: flex;
@@ -196,7 +195,7 @@ button:hover {
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: calc(33.33% - 20px); /* Ensure 3 items per row, with some space between */
+    width: calc(33.33% - 20px); 
     box-sizing: border-box;
     text-align: center;
 }
@@ -260,14 +259,14 @@ button:hover {
 /* Responsive Styles */
 @media screen and (max-width: 1024px) {
     .product-item {
-        width: calc(50% - 20px); /* 2 items per row for larger tablets */
+        width: calc(50% - 20px); 
     }
 
 }
 
     @media screen and (max-width: 768px) {
     .product-item {
-        width: calc(50% - 20px); /* 1 item per row for mobile screens */
+        width: calc(50% - 20px); 
     }
     .actions {
         justify-content: flex-start;

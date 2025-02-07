@@ -8,9 +8,8 @@ class MessageController {
     private $replyCRUD;
 
     public function __construct() {
-        // Initialize the dbConnect and get connection
         $db = new dbConnect();
-        $conn = $db->connectDB(); // Calling connectDB() to get the connection
+        $conn = $db->connectDB(); 
         $this->messageCRUD = new MessageCRUD($conn);
         $this->replyCRUD = new ReplyCRUD($conn);
     }
