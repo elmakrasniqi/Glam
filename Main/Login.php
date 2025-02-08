@@ -13,11 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_id'] = $userData['id'];
         $_SESSION['role'] = $userData['role'];
 
-        // Set cookies for persistent login
         setcookie('user_email', $email, time() + (86400 * 30), "/");
         setcookie('user_id', $userData['id'], time() + (86400 * 30), "/");
 
-        // Redirect based on role
         if ($userData['role'] == 1) {
             header("Location: ../Admin/dashboard.php");
             exit();
@@ -26,14 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
     } else {
-        // Silent fail: Redirect back to login page with no error message
-        header("Location: Login.php");
+        header("Location: Login.php"); //silent fail
         exit();
     }
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -83,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </div>
-
+   <!--Validation-->
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const loginForm = document.querySelector('form[action="Login.php"]');
@@ -91,25 +86,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const email = loginForm.querySelector('input[name="email"]').value.trim();
             const password = loginForm.querySelector('input[name="password"]').value.trim();
 
-            // Regex for email validation
             const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
 
-            // Validate email
             if (!emailRegex.test(email)) {
                 alert('Please enter a valid email address.');
-                event.preventDefault(); // Prevent form submission
+                event.preventDefault(); 
                 return;
             }
 
-            // Validate password length
             if (password.length < 6) {
                 alert('Password must be at least 6 characters long.');
-                event.preventDefault(); // Prevent form submission
+                event.preventDefault(); 
                 return;
             }
         });
     });
 </script>
+
 <footer class="footer">
         <div class="container">
           <div class="map">

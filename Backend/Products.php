@@ -15,7 +15,6 @@ class Product {
         $this->brand = $brand;
     }
 
-    // Getters and setters...
     public function getId() {
         return $this->id;
     }
@@ -56,7 +55,6 @@ class Product {
         $this->brand = $brand;
     }
 
-    // Display product method
     public function displayProduct() {
         return "<div class='product-item' data-name='" . htmlspecialchars($this->getBrand()) . "'>
                     <img src='" . htmlspecialchars($this->getImage()) . "' alt='" . htmlspecialchars($this->getName()) . "'>
@@ -66,7 +64,6 @@ class Product {
                 </div>";
     }
 
-    // Static method to fetch all products
     public static function getAllProducts($pdo) {
         $query = "SELECT * FROM products";
         $stmt = $pdo->prepare($query);
@@ -86,7 +83,6 @@ class Product {
         return $products;
     }
 
-    // Create a new product
     public static function createProduct($pdo, $name, $price, $image, $brand) {
         $query = "INSERT INTO products (name, price, image, brand, modified_at) 
         VALUES (:name, :price, :image, :brand,  NOW())";
@@ -97,7 +93,6 @@ class Product {
         $stmt->bindParam(':brand', $brand);
 
         if ($stmt->execute()) {
-        // Create an instance of Product and log the action
         $product = new Product($pdo->lastInsertId(), $name, $price, $image, $brand);            
         if(isset($id)) {
                 Product::logAdminAction('insert', $id); 
@@ -108,7 +103,6 @@ class Product {
     }
     
 
-    // Read a single product by ID
     public static function getProductById($pdo, $id) {
         $query = "SELECT * FROM products WHERE id = :id";
         $stmt = $pdo->prepare($query);
@@ -128,7 +122,6 @@ class Product {
         return null;
     }
 
-    // Update an existing product
     public static function updateProduct($pdo, $id, $name, $price, $image, $brand) {
         $query = "UPDATE products SET 
         name = :name,
@@ -144,7 +137,6 @@ class Product {
         $stmt->bindParam(':image', $image);
         $stmt->bindParam(':brand', $brand);
         if ($stmt->execute()) {
-        // Create an instance of Product and log the action
         $product = new Product($id, $name, $price, $image, $brand);
         $product->logAdminAction('update', $id);
             return true;
@@ -152,7 +144,6 @@ class Product {
         return false;
     }
 
-    // Delete a product by ID
     public static function deleteProduct($pdo, $id) {
         $query = "DELETE FROM products WHERE id = :id";
         $stmt = $pdo->prepare($query);
@@ -163,19 +154,15 @@ class Product {
     public static function logAdminAction($action, $product_id) {
         global $conn;
         
-        // SQL query to insert into admin_actions table
         $sql = "INSERT INTO admin_actions (product_id, action, action_time) 
                 VALUES (:product_id, :action, NOW())";
         
-        // Prepare and bind the SQL query
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
         $stmt->bindParam(':action', $action);
-        
-        // Execute the query
+
         $stmt->execute();
     }
-    //Get modifications that are made
     public static function getProductModifications($pdo) {
         $sql = "SELECT p.name AS product_name, aa.action, aa.action_time
                 FROM admin_actions aa

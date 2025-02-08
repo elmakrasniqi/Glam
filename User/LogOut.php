@@ -1,17 +1,16 @@
 <?php
-session_start(); // Start the session to destroy it
-session_unset(); // Unset all session variables
-session_destroy(); // Destroy the session
+session_start(); 
+session_unset(); 
+session_destroy(); 
 
-// Delete cookies by setting their expiration time in the past
+
 if (isset($_COOKIE['user_email'])) {
-    setcookie('user_email', '', time() - 3600, "/"); // Clear email cookie
+    setcookie('user_email', '', time() - 3600, "/"); 
 }
 if (isset($_COOKIE['user_id'])) {
-    setcookie('user_id', '', time() - 3600, "/"); // Clear ID cookie
+    setcookie('user_id', '', time() - 3600, "/"); 
 }
 
-// Redirect to the login page after successful logout
-header("Location: ../Main/Login.php");
+header("Location: ../Main/Login.php"); // direct to login
 exit();
 ?>

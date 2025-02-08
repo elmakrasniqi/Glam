@@ -1,7 +1,7 @@
 <?php
 session_start();
 if ($_SESSION['role'] != 0) {
-    header("Location: Login.php"); // Redirect to login if the user is not a regular user
+    header("Location: Login.php"); 
     exit();
 }
 ?>
