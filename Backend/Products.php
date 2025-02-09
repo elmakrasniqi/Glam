@@ -143,13 +143,24 @@ class Product {
         }
         return false;
     }
-
     public static function deleteProduct($pdo, $id) {
+         $query = "DELETE FROM admin_actions WHERE product_id = :id";
+         $stmt = $pdo->prepare($query);
+         $stmt->bindParam(':id', $id);
+         $stmt->execute();
+    
         $query = "DELETE FROM products WHERE id = :id";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':id', $id);
-        return $stmt->execute();
+        $stmt->execute();
+        
+        if ($stmt->rowCount() > 0) {
+            return true;  
+        } else {
+            return false; 
+        }
     }
+    
 
     public static function logAdminAction($action, $product_id) {
         global $conn;

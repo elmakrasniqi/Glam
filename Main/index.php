@@ -179,7 +179,7 @@
         <h1>YSL</h1>
         <p>YSL (Yves Saint Laurent) is a renowned luxury brand offering a wide range of makeup products known for their high-quality formulations and elegant packaging. Some of their standout items. They  regularly releases seasonal and limited-edition collections with luxurious designs, often featuring their iconic gold and black packaging.Yves Saint Laurent is a name that whispers luxury and shouts innovation. It’s a house where elegance meets audacity, where timeless classics are born and modern sophistication thrives. YSL embodies the art of bold beauty, weaving confidence into every product and daring into every design. </p>
         <div class="ysl-makeup">
-           <a href="./MakeUp.html">See more</a>
+           <a href="./MakeUp.php">See more</a>
         </div>
       </div>
     </div>
